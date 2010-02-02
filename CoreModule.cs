@@ -6,7 +6,6 @@ using System;
 using System.Web;
 //+
 using Nalarium.Web.Processing.Configuration;
-using Nalarium.Web.Processing;
 //+
 namespace Nalarium.Web.Processing
 {
@@ -41,8 +40,6 @@ namespace Nalarium.Web.Processing
         //- @Init -//
         public void Init(HttpApplication httpApplication)
         {
-            CheckForAssemblyRequirement();
-            //+
             RouteActivator.RunSystemInitProcessors();
             //+
             _profilingEnabled = ProcessingSection.GetConfigSection().Profiling.Enabled;
@@ -66,40 +63,6 @@ namespace Nalarium.Web.Processing
             httpApplication.PostAcquireRequestState += new EventHandler(OnPostAcquireRequestState);
             //+
             httpApplication.Error += ErrorHandler.OnHandleError;
-        }
-
-        //- $CheckForAssemblyRequirement -//
-        private void CheckForAssemblyRequirement()
-        {
-            try
-            {
-                System.Reflection.Assembly.ReflectionOnlyLoad("Nalarium.Mvp");
-            }
-            catch (System.IO.FileNotFoundException)
-            {
-                IsMvpAvailable = false;
-                return;
-            }
-            try
-            {
-                System.Reflection.Assembly assembly = System.Reflection.Assembly.Load("Nalarium.Web.Mvc");
-                mvcHandlerType = assembly.GetType("Nalarium.Web.Mvc.AspNetMvcHttpHandler", false);
-                //if (type != null)
-                //{
-                //    //++
-                //    //TODO: Make some type of "universal handler factory" thing or something so this is ALWAYS checked in ALL web domains.
-                //    //++
-                //    mvcHandlerType = Nalarium.Activation.ObjectCreator.CreateAs<HandlerFactory>(type);
-                //}
-            }
-            catch (System.IO.FileNotFoundException)
-            {
-                IsMvcAvailable = false;
-                return;
-            }
-            //+
-            IsMvpAvailable = true;
-            IsMvcAvailable = true;
         }
 
         //- $BeginRequest -//

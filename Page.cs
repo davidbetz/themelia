@@ -97,17 +97,6 @@ namespace Nalarium.Web.Processing
                     PageInitializer.PageName = pageName;
                     PageInitializer.SetPage(this);
                     PageInitializer.InitData();
-                    //foreach (String name in PageInitializer.ModelTypeMap.GetKeyList())
-                    //{
-                    //    Type modelType = PageInitializer.ModelTypeMap[name];
-                    //    Model model = Nalarium.Activation.ObjectCreator.Create(modelType) as Model;
-                    //    if (model == null)
-                    //    {
-                    //        continue;
-                    //    }
-                    //    model.Init();
-                    //    PageInitializer.Model.Add(name, model);
-                    //}
                 }
             }
             System.Reflection.MethodInfo pageMethodInfo = pageInitializerType.GetMethod(pageName);

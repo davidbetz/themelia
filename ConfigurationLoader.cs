@@ -62,15 +62,7 @@ namespace Nalarium.Web.Processing
             //++  create the web domain fresh.
             data.CatchAllMode = webDomainElement.CatchAllMode;
             data.CatchAllInitParameter = webDomainElement.CatchAllInitParameter;
-            //if (webDomainElement.EnableMissingSlash)
-            //{
-            //    data.AcceptMissingTrailingSlash = webDomainElement.EnableMissingSlash;
-            //}
             data.Name = webDomainName;
-            //if (!String.IsNullOrEmpty(webDomainElement.Default) && !String.IsNullOrEmpty(webDomainElement.DefaultEndpoint))
-            //{
-            //    throw new InvalidOperationException(Nalarium.Web.Globalization.ResourceAccessor.GetString("WebDomain_DefaultPageAndDefaultEndpointMayNotBothBeSet"));
-            //}
             if (!String.IsNullOrEmpty(webDomainElement.AccessRuleGroup))
             {
                 data.AccessRuleGroup = webDomainElement.AccessRuleGroup;
@@ -93,18 +85,6 @@ namespace Nalarium.Web.Processing
                 data.DefaultParameter = UrlCleaner.CleanWebPathHead(parameter);
                 data.DefaultType = type;
             }
-            //if (!String.IsNullOrEmpty(webDomainElement.DefaultEndpoint))
-            //{
-            //    data.DefaultEndpoint = webDomainElement.DefaultEndpoint;
-            //}
-            //if (!String.IsNullOrEmpty(data.Default))
-            //{
-            //    if (data.Default.StartsWith("~", StringComparison.OrdinalIgnoreCase))
-            //    {
-            //        data.Default = data.Default.Substring(1, data.Default.Length - 1);
-            //    }
-            //    data.Default = UrlCleaner.FixWebPathHead(data.Default);
-            //}
             if (webDomainName == Info.Root)
             {
                 data.Path = String.Empty;
@@ -158,10 +138,6 @@ namespace Nalarium.Web.Processing
             {
                 data.ProcessorFactoryDataList = new ProcessorFactoryDataList();
             }
-            //if (data.AccessRuleDataList == null || (flags & ResetFlags.AccessRule) == ResetFlags.AccessRule)
-            //{
-            //    data.AccessRuleDataList = new AccessRuleDataList();
-            //}
             if (data.EndpointDataList == null || (flags & ResetFlags.Endpoint) == ResetFlags.Endpoint)
             {
                 data.EndpointDataList = new EndpointDataList();
@@ -345,33 +321,6 @@ namespace Nalarium.Web.Processing
             }
         }
 
-        ////- ~LoadAccessRuleData -//
-        //internal static void LoadAccessRuleData(Data.WebDomainData data, AccessRuleCollection collection)
-        //{
-        //    List<AccessRuleElement> elementList = collection.OrderBy(p => p.Priority).ToList();
-        //    data.AccessRuleDataList.DefaultAccessMode = collection.DefaultAccessMode;
-        //    data.AccessRuleDataList.Parameter = collection.Parameter;
-        //    data.AccessRuleDataList.ParameterType = collection.ActionType;
-        //    foreach (AccessRuleElement element in elementList)
-        //    {
-        //        if (element.Disabled)
-        //        {
-        //            continue;
-        //        }
-        //        data.AccessRuleDataList.Add(new AccessRuleData
-        //        {
-        //            AccessType = element.AccessType,
-        //            Text = element.Text,
-        //            Name = element.Name,
-        //            Parameter = element.Parameter,
-        //            ParameterType = element.ActionType,
-        //            Disabled = element.Disabled
-        //        });
-        //    }
-        //}
-
-
-        //- ~LoadComponentData -//
         internal static void LoadComponentData(WebDomainData data, ComponentCollection componentCollection, String webDomainBasedOn)
         {
             List<ComponentElement> componentList = componentCollection.OrderBy(p => p.Priority).ToList();

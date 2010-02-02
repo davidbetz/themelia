@@ -10,16 +10,6 @@ namespace Nalarium.Web.Processing.Configuration
     [System.Diagnostics.DebuggerDisplay("EnableWebDomainMissingSlash: {EnableWebDomainMissingSlash}, EnableDirectPageAccess: {EnableDirectPageAccess}")]
     public class WebDomainCollection : Nalarium.Configuration.CommentableCollection<WebDomainElement>
     {
-        ////- ~EnableWebDomainMissingSlash -//
-        //[ConfigurationProperty("enableWebDomainMissingSlash")]
-        //internal Boolean EnableWebDomainMissingSlash
-        //{
-        //    get
-        //    {
-        //        return (Boolean)this["enableWebDomainMissingSlash"];
-        //    }
-        //}
-
         //- @AccessRuleGroup -//
         [ConfigurationProperty("accessRuleGroup")]
         public String AccessRuleGroup

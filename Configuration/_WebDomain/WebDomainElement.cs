@@ -12,16 +12,6 @@ namespace Nalarium.Web.Processing.Configuration
     [System.Diagnostics.DebuggerDisplay("{Name}, Path: {Path}, Subdomain: {Subdomain}, EnableMissingSlash: {EnableMissingSlash}, BasedOn: {BasedOn}")]
     public class WebDomainElement : Nalarium.Configuration.CommentableElement
     {
-        ////- @EnableMissingSlash -//
-        //[ConfigurationProperty("enableMissingSlash")]
-        //public Boolean EnableMissingSlash
-        //{
-        //    get
-        //    {
-        //        return (Boolean)this["enableMissingSlash"];
-        //    }
-        //}
-
         //- @CatchAllMode -//
         [ConfigurationProperty("catchAllMode", DefaultValue = "Custom")]
         public Nalarium.Web.Processing.CatchAllMode CatchAllMode
@@ -61,16 +51,6 @@ namespace Nalarium.Web.Processing.Configuration
                 return (String)this["defaultParameter"];
             }
         }
-
-        ////- @DefaultEndpoint -//
-        //[ConfigurationProperty("defaultEndpoint")]
-        //public String DefaultEndpoint
-        //{
-        //    get
-        //    {
-        //        return (String)this["defaultEndpoint"];
-        //    }
-        //}
 
         //- @AccessRuleGroup -//
         [ConfigurationProperty("accessRuleGroup")]
@@ -244,17 +224,6 @@ namespace Nalarium.Web.Processing.Configuration
                 return (EndpointCollection)this["endpoints"];
             }
         }
-
-        ////- @AccessRules -//
-        //[ConfigurationProperty("accessRules")]
-        //[ConfigurationCollection(typeof(AccessRuleElement), AddItemName = "add")]
-        //public AccessRuleCollection AccessRules
-        //{
-        //    get
-        //    {
-        //        return (AccessRuleCollection)this["accessRules"];
-        //    }
-        //}
 
         //- @Security -//
         [ConfigurationProperty("security")]

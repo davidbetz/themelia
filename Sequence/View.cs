@@ -81,54 +81,6 @@ namespace Nalarium.Web.Processing.Sequence
             }
         }
 
-        ////- @MovePrevious -//
-        ///// <summary>
-        ///// Sets the currently active view to the one just prior to the current one.
-        ///// </summary>
-        //public void MoveToPreviousView()
-        //{
-        //    if (Sequencer != null)
-        //    {
-        //        Sequencer.MoveToPreviousView();
-        //    }
-        //}
-
-        ////- @MoveNext -//
-        ///// <summary>
-        ///// Sets the currently active view to the one just after to the current one.
-        ///// </summary>
-        //public void MoveToNextView()
-        //{
-        //    if (Sequencer != null)
-        //    {
-        //        Sequencer.MoveToNextView();
-        //    }
-        //}
-
-        ////- @MoveToFirstView -//
-        ///// <summary>
-        ///// Sets the currently active view to the first view available.
-        ///// </summary>
-        //public void MoveToFirstView()
-        //{
-        //    if (Sequencer != null)
-        //    {
-        //        Sequencer.MoveToFirstView();
-        //    }
-        //}
-
-        ////- @MoveToLastView -//
-        ///// <summary>
-        ///// Sets the currently active view to the last view available.
-        ///// </summary>
-        //public void MoveToLastView()
-        //{
-        //    if (Sequencer != null)
-        //    {
-        //        Sequencer.MoveToLastView();
-        //    }
-        //}
-
         //- @SetView -//
         /// <summary>
         /// Sets the currently active view to a specific view.

@@ -3,7 +3,6 @@
 //+ Copyright © Jampad Technology, Inc. 2008-2010
 #endregion
 using System;
-using System.Linq;
 //+
 using Nalarium.Web.Processing.Data;
 //+
@@ -278,132 +277,6 @@ namespace Nalarium.Web.Processing.Sequence
         //    }
         //}
 
-        //protected virtual void ProcessCommand()
-        //{
-        //    //+ process message
-        //    if (!String.IsNullOrEmpty(StateTracker.PostedMessage))
-        //    {
-        //        Boolean isNext = false;
-        //        switch (StateTracker.PostedMessage.ToLower())
-        //        {
-        //            case Info.FirstMessage:
-        //                _activeViewData = ViewDataList.FirstOrDefault();
-        //                break;
-        //            case Info.LastMessage:
-        //                _activeViewData = ViewDataList.LastOrDefault();
-        //                break;
-        //            case Info.NextMessage:
-        //                foreach (ViewData vd in ViewDataList)
-        //                {
-        //                    if (isNext)
-        //                    {
-        //                        _activeViewData = vd;
-        //                        break;
-        //                    }
-        //                    if (vd.Name == _activeViewName)
-        //                    {
-        //                        isNext = true;
-        //                    }
-        //                }
-        //                break;
-        //            case Info.PreviousMessage:
-        //                for (int i = ViewDataList.Count; i >= 0; i--)
-        //                {
-        //                    if (isNext)
-        //                    {
-        //                        _activeViewData = ViewDataList[i];
-        //                        break;
-        //                    }
-        //                    if (ViewDataList[i].Name == _activeViewName)
-        //                    {
-        //                        isNext = true;
-        //                    }
-        //                }
-        //                break;
-        //            case Info.JumpMessage:
-        //                if (!String.IsNullOrEmpty(StateTracker.GetPostedMessageParameter(Position.First)))
-        //                {
-        //                    ViewData tmp = ViewDataList.SingleOrDefault(p => p.Name == StateTracker.GetPostedMessageParameter(Position.First));
-        //                    if (tmp != null)
-        //                    {
-        //                        _activeViewData = tmp;
-        //                    }
-        //                }
-        //                break;
-        //        }
-        //    }
-        //}
-
-        ////- @MoveToPreviousView -//
-        ///// <summary>
-        ///// Sets the currently active view to the one just prior to the current one.
-        ///// </summary>
-        //public void MoveToPreviousView()
-        //{
-        //    if (String.IsNullOrEmpty(_activeViewName))
-        //    {
-        //        return;
-        //    }
-        //    Boolean isNext = false;
-        //    for (int i = ViewDataList.Count; i >= 0; i--)
-        //    {
-        //        if (isNext)
-        //        {
-        //            _activeViewData = ViewDataList[i];
-        //            break;
-        //        }
-        //        if (ViewDataList[i].Name == _activeViewName)
-        //        {
-        //            isNext = true;
-        //        }
-        //    }
-        //    ShowControl(_activeViewData);
-        //}
-
-        ////- @MoveToNextView -//
-        ///// <summary>
-        ///// Sets the currently active view to the one just after to the current one.
-        ///// </summary>
-        //public void MoveToNextView()
-        //{
-        //    if (String.IsNullOrEmpty(_activeViewName))
-        //    {
-        //        return;
-        //    }
-        //    Boolean isNext = false;
-        //    foreach (ViewData vd in ViewDataList)
-        //    {
-        //        if (isNext)
-        //        {
-        //            _activeViewData = vd;
-        //            break;
-        //        }
-        //        if (vd.Name == _activeViewName)
-        //        {
-        //            isNext = true;
-        //        }
-        //    }
-        //    ShowControl(_activeViewData);
-        //}
-
-        ////- @MoveToFirstView -//
-        ///// <summary>
-        ///// Sets the currently active view to the first view available.
-        ///// </summary>
-        //public void MoveToFirstView()
-        //{
-        //    ShowControl(ViewDataList[0]);
-        //}
-
-        ////- @MoveToLastView -//
-        ///// <summary>
-        ///// Sets the currently active view to the last view available.
-        ///// </summary>
-        //public void MoveToLastView()
-        //{
-        //    ShowControl(ViewDataList[ViewDataList.Count]);
-        //}
-
         //- @SetView -//
         public void SetView(String viewName)
         {
@@ -448,48 +321,6 @@ namespace Nalarium.Web.Processing.Sequence
             //+ update state
             StateTracker.Set(StateEntryType.Value, "__$Sequence$ViewDataName", _activeViewName);
         }
-
-        ////- $EnsureViewConsistency -//
-        //private void EnsureViewConsistency()
-        //{
-        //    lock (_lock)
-        //    {
-        //        if (!ValidatedSequenceMap.ContainsKey(SequenceName))
-        //        {
-        //            SequenceType type = SequenceType.Normal;
-        //            Boolean first = true;
-        //            foreach (VersionData versionData in VersionDataList)
-        //            {
-        //                foreach (ViewData viewData in ViewDataList)
-        //                {
-        //                    if (!String.IsNullOrEmpty(viewData.ViewUsed) && !viewData.Name.Equals(viewData.ViewUsed))
-        //                    {
-        //                        //+ when ViewUsed is set, the control won't be used.  so, don't validate it.
-        //                        continue;
-        //                    }
-        //                    View view = LoadView(viewData.Name, viewData.ViewUsed, versionData.Name);
-        //                    if (view is Mvp.IIsMvp)
-        //                    {
-        //                        if (first)
-        //                        {
-        //                            type = SequenceType.Mvp;
-        //                        }
-        //                    }
-        //                    else
-        //                    {
-        //                        if (first)
-        //                        {
-        //                            type = SequenceType.Normal;
-        //                        }
-        //                    }
-        //                    first = false;
-        //                }
-        //            }
-        //            //+
-        //            ValidatedSequenceMap[SequenceName] = type;
-        //        }
-        //    }
-        //}
 
         //- $LoadView -//
         protected virtual View LoadView(String viewName, String version)

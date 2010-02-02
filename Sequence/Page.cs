@@ -88,10 +88,6 @@ namespace Nalarium.Web.Processing.Sequence
         //- #OnInitComplete -//
         protected override void OnInitComplete(EventArgs e)
         {
-            //if (CoreModule.IsMvpAvailable)
-            //{
-            //    SetupMvp();
-            //}
             //+ analytics
             if (EnableGoogleAnalytics && !String.IsNullOrEmpty(GoogleAnalyticsTrackingCode) && Sequencer != null)
             {
@@ -100,70 +96,10 @@ namespace Nalarium.Web.Processing.Sequence
                     Sequencer.Controls.Add(new Nalarium.Web.Controls.GoogleAnalytics(GoogleAnalyticsTrackingCode));
                 }
             }
-            ////+ state
-            //if (ControlFinder.FindControlRecursivelyByType<Nalarium.Web.Controls.StateArea>(this) == null)
-            //{
-            //    System.Web.UI.Control stateContainer = null;
-            //    if (!String.IsNullOrEmpty(Sequencer.StateContainerID))
-            //    {
-            //        stateContainer = ControlFinder.FindControlRecursively(this, Sequencer.StateContainerID);
-            //        if (stateContainer != null)
-            //        {
-            //            stateContainer.Controls.Add(new Nalarium.Web.Controls.StateArea());
-            //        }
-            //    }
-            //    if (stateContainer == null)
-            //    {
-            //        Sequencer.Controls.Add(new Nalarium.Web.Controls.StateArea());
-            //    }
-            //}
             //+
             base.OnInitComplete(e);
         }
 
-        ////- $SetupMvp -//
-        //private void SetupMvp()
-        //{
-        //    if (Sequencer == null ||
-        //       Sequencer.CurrentView == null)
-        //    {
-        //        return;
-        //    }
-        //    if (!(Sequencer.CurrentView is Nalarium.Mvp.IView) || !(Sequencer.CurrentView is Mvp.IIsMvp))
-        //    {
-        //        Sequencer.CurrentView.PresenterPlain = new Nalarium.Mvp.DummyPresenter();
-        //        return;
-        //    }
-        //    if (String.IsNullOrEmpty(Sequencer.SequenceName) ||
-        //       String.IsNullOrEmpty(Sequencer.ActiveViewName))
-        //    {
-        //        return;
-        //    }
-        //    View view = Sequencer.CurrentView;
-        //    Type baseType = view.GetType();
-        //    Boolean done = false;
-        //    while (!done)
-        //    {
-        //        baseType = baseType.BaseType;
-        //        if (baseType == null || baseType.FullName.StartsWith("Nalarium.Web.Sequence.Mvp.View`1", StringComparison.InvariantCulture))
-        //        {
-        //            done = true;
-        //        }
-        //    }
-        //    Type presenterType = null;
-        //    if (baseType != null)
-        //    {
-        //        Type[] typeArray = baseType.GetGenericArguments();
-        //        if (typeArray != null)
-        //        {
-        //            presenterType = typeArray[0];
-        //        }
-        //    }
-        //    view.PresenterPlain = Nalarium.Activation.ObjectCreator.Create(presenterType) as Nalarium.Mvp.Presenter;
-        //    view.PresenterPlain.SetView(Sequencer.CurrentView as Nalarium.Mvp.IView, Sequencer.ActiveVersionName);
-        //}
-
-        //- ~SetVersion -//
         internal String SetVersion()
         {
             VersionData versionData;

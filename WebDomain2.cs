@@ -32,26 +32,6 @@ namespace Nalarium.Web.Processing
         /// <value>The current web domain information</value>
         public WebDomainData Configuration { get; set; }
 
-        ////- ~ActiveConfiguration -//
-        ///// <summary>
-        ///// Gets the current web domain information
-        ///// </summary>
-        ///// <value>The current web domain information</value>
-        //public WebDomainData ActiveConfiguration
-        //{
-        //    get
-        //    {
-        //        return HttpData.GetScopedItem<WebDomainData>(Nalarium.Web.Processing.RouteActivator.Info.Scope, Info.ActiveData);
-        //    }
-        //    set
-        //    {
-        //        if (value != null)
-        //        {
-        //            HttpData.SetScopedItem<WebDomainData>(Nalarium.Web.Processing.RouteActivator.Info.Scope, Info.ActiveData, value);
-        //        }
-        //    }
-        //}
-
         //- @IsRoot -//
         /// <summary>
         /// Gets a value indicating whether this instance is root.
