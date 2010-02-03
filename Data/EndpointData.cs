@@ -95,7 +95,7 @@ namespace Nalarium.Web.Processing.Data
                 ParameterValue = this.ParameterValue,
                 ParameterMap = newMap,
                 RequireSlash = this.RequireSlash,
-                SubEndpointDataList = this.SubEndpointDataList,
+                SubEndpointDataList = this.SubEndpointDataList != null ? this.SubEndpointDataList.Clone() : new EndpointDataList(),
                 Source = this.Source
             };
             //+

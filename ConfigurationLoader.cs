@@ -762,6 +762,16 @@ namespace Nalarium.Web.Processing
                     data.EndpointDataList.Add(endpointData);
                 }
             }
+            EndpointDataList handlerList = data.EndpointDataList.Clone();
+            data.EndpointDataList = new EndpointDataList();
+            handlerList.Where(p => p.Selector == SelectorType.PathEquals).OrderByDescending(p => p.Text.Length).ToList().ForEach(p => data.EndpointDataList.Add(p));
+            handlerList.Where(p => p.Selector == SelectorType.EndsWith).OrderByDescending(p => p.Text.Length).ToList().ForEach(p => data.EndpointDataList.Add(p));
+            handlerList.Where(p => p.Selector == SelectorType.WebDomainPathStartsWith).OrderByDescending(p => p.Text.Length).ToList().ForEach(p => data.EndpointDataList.Add(p));
+            handlerList.Where(p => p.Selector == SelectorType.WebDomainPathEquals).OrderByDescending(p => p.Text.Length).ToList().ForEach(p => data.EndpointDataList.Add(p));
+            handlerList.Where(p => p.Selector == SelectorType.PathStartsWith).OrderByDescending(p => p.Text.Length).ToList().ForEach(p => data.EndpointDataList.Add(p));
+            handlerList.Where(p => p.Selector == SelectorType.StartsWith).OrderByDescending(p => p.Text.Length).ToList().ForEach(p => data.EndpointDataList.Add(p));
+            handlerList.Where(p => p.Selector == SelectorType.PathContains).OrderByDescending(p => p.Text.Length).ToList().ForEach(p => data.EndpointDataList.Add(p));
+            handlerList.Where(p => p.Selector == SelectorType.Contains).OrderByDescending(p => p.Text.Length).ToList().ForEach(p => data.EndpointDataList.Add(p));
             //+
             data.EndpointDataList.OriginalCount = data.EndpointDataList.Count;
         }

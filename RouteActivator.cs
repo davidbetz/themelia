@@ -44,7 +44,7 @@ namespace Nalarium.Web.Processing
                 }
             });
             //+
-            ProcessorRunner.RunSorting(activeData);
+            //ProcessorRunner.RunSorting(activeData);
             //+
             ProcessorRunner.RunInitProcessing(context, activeData.InitProcessorDataList);
             //+ skip?
