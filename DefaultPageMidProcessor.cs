@@ -45,7 +45,12 @@ namespace Nalarium.Web.Processing
                             ParameterMap = data.ParameterDataList.GetMapForCategory(String.Empty)
                         };
                     }
-                    return new HttpHandlerSelector().AttemptHttpHandlerCreate(endpointData);
+                    String typeName = endpointData.Type;
+                    if (!typeName.Contains(","))
+                    {
+                        typeName = "{" + typeName + "}";
+                    }
+                    return new HttpHandlerSelector().AttemptHttpHandlerCreate(endpointData, typeName);
                 //+
                 case DefaultType.Mvc:
                     return CreateMvcHandler();

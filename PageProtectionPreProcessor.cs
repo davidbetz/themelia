@@ -13,7 +13,7 @@ namespace Nalarium.Web.Processing
         public override System.Web.IHttpHandler Execute(params Object[] parameterArray)
         {
             String first = Http.GetUrlPart(Position.First);
-            if ((first == "page_" || first == "sequence_") && !ProcessingSection.GetConfigSection().WebDomain.EnableDirectPageAccess)
+            if ((first == "shared_" || first == "page_" || first == "sequence_") && !ProcessingSection.GetConfigSection().WebDomain.EnableDirectPageAccess)
             {
                 return NonPublicHandlerFactory.CreateHttpNotFoundHandler();
             }

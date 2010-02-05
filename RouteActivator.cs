@@ -216,6 +216,7 @@ namespace Nalarium.Web.Processing
                     new DebugInitProcessor().Execute();
                     new ConfigurationInitProcessor().Execute();
                     new AccessRuleInitProcessor().Execute();
+                    new ScannedTypeCacheInitProcessor().Execute();
                     //+
                     Boolean disableProcessing = false;
                     Nalarium.Web.Processing.Configuration.ProcessingSection section = Nalarium.Web.Processing.Configuration.ProcessingSection.GetConfigSection();

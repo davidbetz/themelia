@@ -159,6 +159,7 @@
     <Compile Include="ResetFlags.cs" />
     <Compile Include="RouteActivator.cs" />
     <Compile Include="RouteCache.cs" />
+    <Compile Include="ScannedTypeCacheInitProcessor.cs" />
     <Compile Include="SecurityStateProcessor.cs" />
     <Compile Include="Sequence\ISequenceInitializer.cs" />
     <Compile Include="Sequence\LocalizedPage.cs">

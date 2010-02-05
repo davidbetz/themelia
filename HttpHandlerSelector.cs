@@ -3,6 +3,7 @@
 //+ Copyright © Jampad Technology, Inc. 2008-2010
 #endregion
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Web;
 //+
@@ -76,7 +77,12 @@ namespace Nalarium.Web.Processing
         //- ~AttemptHttpHandlerCreate-//
         internal IHttpHandler AttemptHttpHandlerCreate(EndpointData endpoint)
         {
-            IHttpHandler hh = CreateHttpHandler(endpoint.Type);
+            return AttemptHttpHandlerCreate(endpoint, endpoint.Type);
+        }
+        //- ~AttemptHttpHandlerCreate-//
+        internal IHttpHandler AttemptHttpHandlerCreate(EndpointData endpoint, String type)
+        {
+            IHttpHandler hh = CreateHttpHandler(type);
             if (hh == null)
             {
                 if (WebProcessingReportController.Reporter.Initialized)
@@ -123,12 +129,12 @@ namespace Nalarium.Web.Processing
         internal static IHttpHandler CreateHttpHandler(String text)
         {
             IHttpHandler handler = null;
-            if (text.Contains(","))
+            if (!text.StartsWith("{") && text.Contains(","))
             {
                 return ObjectCreator.CreateAs<IHttpHandler>(text);
             }
             //+
-            if (RouteCache.HandlerFactoryCache != null)
+            if (!text.StartsWith("{") && RouteCache.HandlerFactoryCache != null)
             {
                 String lowerCaseText = text.ToLower(System.Globalization.CultureInfo.CurrentCulture);
                 List<IFactory> handlerFactoryList = RouteCache.HandlerFactoryCache.GetValueList();
@@ -139,6 +145,16 @@ namespace Nalarium.Web.Processing
                     {
                         break;
                     }
+                }
+            }
+            if (handler == null && text.StartsWith("{"))
+            {
+                text = text.Substring(1, text.Length - 2);
+                System.Collections.Generic.List<Type> list = ScannedTypeCache.GetTypeData("httpHandler");
+                Type httpHandlerType = list.SingleOrDefault(p => p.Name == text + "HttpHandler");
+                if (httpHandlerType != null)
+                {
+                    handler = Nalarium.Activation.ObjectCreator.CreateAs<IHttpHandler>(httpHandlerType);
                 }
             }
             //+

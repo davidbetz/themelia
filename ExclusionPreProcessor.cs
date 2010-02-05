@@ -12,6 +12,8 @@ namespace Nalarium.Web.Processing
         {
             switch (Http.GetUrlPart(Position.First))
             {
+                case "content_":
+                case "partition_":
                 case "resource_":
                 case "service_":
                     FlowControl.EndProcessing();
