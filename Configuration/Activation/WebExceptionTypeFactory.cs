@@ -31,10 +31,6 @@ namespace Nalarium.Web.Activation
                     return TypeCache.InlineRegister(typeof(System.Web.Caching.TableNotEnabledForNotificationException));
                 case "sqlexecution":
                     return TypeCache.InlineRegister(typeof(System.Web.Management.SqlExecutionException));
-                case "membershipcreateuser":
-                    return TypeCache.InlineRegister(typeof(System.Web.Security.MembershipCreateUserException));
-                case "membershippassword":
-                    return TypeCache.InlineRegister(typeof(System.Web.Security.MembershipPasswordException));
                 case "viewstate":
                     return TypeCache.InlineRegister(typeof(System.Web.UI.ViewStateException));
             }
