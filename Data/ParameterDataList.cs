@@ -1,11 +1,14 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//+
+
 namespace Nalarium.Web.Processing.Data
 {
     public class ParameterDataList : List<ParameterData>
@@ -29,7 +32,7 @@ namespace Nalarium.Web.Processing.Data
         //- @GetMap -//
         public Map GetMapForCategory(String category)
         {
-            Map map = new Map();
+            var map = new Map();
             foreach (ParameterData data in this.Where(p => p.Category.Equals(category, StringComparison.InvariantCultureIgnoreCase)))
             {
                 map.Add(data.Name, data.Value);
@@ -41,7 +44,7 @@ namespace Nalarium.Web.Processing.Data
         //- @GetMap -//
         public Map GetMap()
         {
-            Map map = new Map();
+            var map = new Map();
             foreach (ParameterData data in this)
             {
                 String name = data.Name;
@@ -58,15 +61,15 @@ namespace Nalarium.Web.Processing.Data
         //- ~Clone -//
         internal ParameterDataList Clone()
         {
-            ParameterDataList list = new ParameterDataList();
+            var list = new ParameterDataList();
             foreach (ParameterData data in this)
             {
                 list.Add(new ParameterData
-                {
-                    Category = data.Category,
-                    Name = data.Name,
-                    Value = data.Value
-                });
+                         {
+                             Category = data.Category,
+                             Name = data.Name,
+                             Value = data.Value
+                         });
             }
             //+
             return list;

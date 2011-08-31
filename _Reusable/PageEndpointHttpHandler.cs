@@ -1,10 +1,18 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
+using System.IO;
+using System.Web.UI;
+using Nalarium.Web.Processing.Configuration;
+
 //+
 //+
+
 namespace Nalarium.Web.Processing
 {
     /// <summary>
@@ -13,15 +21,31 @@ namespace Nalarium.Web.Processing
     internal class PageEndpointHttpHandler : SessionHttpHandler, IHasParameterMap, IHasPage
     {
         //- ~Info -//
-        internal static class Info
-        {
-            public const String MatchText = "MatchText";
-            public const String MatchType = "MatchType";
-            public const String IsSequence = "IsSequence";
-        }
 
         //+
         //- @IsDefaultRedirect -//
+        public PageEndpointHttpHandler()
+            : this(false)
+        {
+        }
+
+        public PageEndpointHttpHandler(Boolean isSequence)
+        {
+            IsSequence = isSequence;
+        }
+
+        public PageEndpointHttpHandler(String target, String extra)
+            : this(false, target, extra)
+        {
+        }
+
+        public PageEndpointHttpHandler(Boolean isSequence, String target, String extra)
+        {
+            IsSequence = isSequence;
+            Target = target;
+            Extra = extra;
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether this instance is actaully the default redirect.
         /// </summary>
@@ -39,7 +63,7 @@ namespace Nalarium.Web.Processing
             }
             set
             {
-                HttpData.SetScopedItem<Boolean>(RouteActivator.Info.Scope, Info.IsSequence, value);
+                HttpData.SetScopedItem(RouteActivator.Info.Scope, Info.IsSequence, value);
             }
         }
 
@@ -55,11 +79,28 @@ namespace Nalarium.Web.Processing
         /// </summary>
         public String Extra { get; set; }
 
+        #region IHasPage Members
+
+        /// <summary>
+        /// Gets the page object.
+        /// </summary>
+        public System.Web.UI.Page Page { get; set; }
+
+        #endregion
+
         //- @DefaultParameter -//
+
+        #region IHasParameterMap Members
+
         public String DefaultParameter
         {
-            get { return "target"; }
-            set { }
+            get
+            {
+                return "target";
+            }
+            set
+            {
+            }
         }
 
         //- @ParameterMap -//
@@ -68,31 +109,9 @@ namespace Nalarium.Web.Processing
         /// </summary>
         public Map ParameterMap { get; set; }
 
-        //- @Page -//
-        /// <summary>
-        /// Gets the page object.
-        /// </summary>
-        public System.Web.UI.Page Page { get; set; }
+        #endregion
 
-        //- @Ctor -//
-        public PageEndpointHttpHandler()
-            : this(false)
-        {
-        }
-        public PageEndpointHttpHandler(Boolean isSequence)
-        {
-            IsSequence = isSequence;
-        }
-        public PageEndpointHttpHandler(String target, String extra)
-            : this(false, target, extra)
-        {
-        }
-        public PageEndpointHttpHandler(Boolean isSequence, String target, String extra)
-        {
-            IsSequence = isSequence;
-            Target = target;
-            Extra = extra;
-        }
+        //- @Page -//
 
         //+
         //- @ProcessRequest -//
@@ -101,7 +120,7 @@ namespace Nalarium.Web.Processing
             SelectorType matchType;
             String matchText = String.Empty;
             //+
-            String defaultPageTarget = HttpData.GetScopedItem<String>(DefaultPageInitProcessor.Info.Scope, DefaultPageInitProcessor.Info.DefaultParameter);
+            var defaultPageTarget = HttpData.GetScopedItem<String>(DefaultPageInitProcessor.Info.Scope, DefaultPageInitProcessor.Info.DefaultParameter);
             if (!String.IsNullOrEmpty(defaultPageTarget))
             {
                 //+ sequence target
@@ -113,16 +132,16 @@ namespace Nalarium.Web.Processing
                         IsSequence = true;
                     }
                 }
-                this.IsDefaultRedirect = true;
+                IsDefaultRedirect = true;
                 try
                 {
-                    this.Page = System.Web.UI.PageParser.GetCompiledPageInstance("~/" + defaultPageTarget, null, Context) as System.Web.UI.Page;
+                    Page = PageParser.GetCompiledPageInstance("~/" + defaultPageTarget, null, Context) as System.Web.UI.Page;
                 }
                 catch (Exception ex)
                 {
                     if (WebProcessingReportController.Reporter.Initialized)
                     {
-                        Map map = new Map();
+                        var map = new Map();
                         if (IsSequence)
                         {
                             map.Add("Section", "Sequence Endpoint (" + Resource.General_DefaultRedirect + ")");
@@ -143,7 +162,7 @@ namespace Nalarium.Web.Processing
                 //+ validate
                 EnsureSequenceUsesSequencePageControl(defaultPageTarget);
                 //+ go
-                this.Page.ProcessRequest(Context);
+                Page.ProcessRequest(Context);
             }
             else
             {
@@ -151,12 +170,12 @@ namespace Nalarium.Web.Processing
                 String extra = String.Empty;
                 matchType = HttpData.GetScopedItem<SelectorType>(RouteActivator.Info.Scope, RouteActivator.Info.Selector);
                 matchText = HttpData.GetScopedItem<String>(RouteActivator.Info.Scope, RouteActivator.Info.Text);
-                if (!String.IsNullOrEmpty(this.Target))
+                if (!String.IsNullOrEmpty(Target))
                 {
-                    target = this.Target;
-                    if (!String.IsNullOrEmpty(this.Extra))
+                    target = Target;
+                    if (!String.IsNullOrEmpty(Extra))
                     {
-                        extra = this.Extra;
+                        extra = Extra;
                     }
                 }
                 else if (ParameterMap != null && ParameterMap.Count > 0)
@@ -185,7 +204,7 @@ namespace Nalarium.Web.Processing
                             IsSequence = true;
                         }
                     }
-                    //+ validate
+                        //+ validate
                     else if (IsSequence)
                     {
                         throw new InvalidOperationException(String.Format(Resource.Sequence_EndpointRequiresSequenceNameCode, target));
@@ -222,17 +241,17 @@ namespace Nalarium.Web.Processing
                         {
                             target = target.Substring(0, pageIndex);
                         }
-                        HttpData.SetScopedItem<Boolean>(Http.Info.Alias, Http.Info.IsAliased, true);
+                        HttpData.SetScopedItem(Http.Info.Alias, Http.Info.IsAliased, true);
                         HttpData.SetHeaderItem(HttpHeader.Response.RewriteUrl, Http.AbsoluteUrlOriginalCase);
                         try
                         {
-                            this.Page = System.Web.UI.PageParser.GetCompiledPageInstance("~/" + target, null, Context) as System.Web.UI.Page;
+                            Page = PageParser.GetCompiledPageInstance("~/" + target, null, Context) as System.Web.UI.Page;
                         }
                         catch (Exception ex)
                         {
                             if (WebProcessingReportController.Reporter.Initialized)
                             {
-                                Map map = new Map();
+                                var map = new Map();
                                 if (IsSequence)
                                 {
                                     map.Add("Section", "Page Endpoint");
@@ -253,7 +272,7 @@ namespace Nalarium.Web.Processing
                         //+ validate
                         EnsureSequenceUsesSequencePageControl(defaultPageTarget);
                         //+ go
-                        this.Page.ProcessRequest(Context);
+                        Page.ProcessRequest(Context);
                     }
                 }
             }
@@ -263,9 +282,9 @@ namespace Nalarium.Web.Processing
         private string GetLinkedSequenceTarget(String target)
         {
             String linkedKey = target.Substring(1, target.Length - 2);
-            String path = Nalarium.Web.Processing.Configuration.ProcessingSection.GetConfigSection().Sequences.RootPath;
-            String sequencePath = System.IO.Path.Combine(path, linkedKey + ".aspx");
-            if (System.IO.File.Exists(Http.Server.MapPath(sequencePath)))
+            String path = ProcessingSection.GetConfigSection().Sequences.RootPath;
+            String sequencePath = Path.Combine(path, linkedKey + ".aspx");
+            if (File.Exists(Http.Server.MapPath(sequencePath)))
             {
                 target = sequencePath;
             }
@@ -273,7 +292,7 @@ namespace Nalarium.Web.Processing
             {
                 if (WebProcessingReportController.Reporter.Initialized)
                 {
-                    Map map = new Map();
+                    var map = new Map();
                     map.Add("Section", "Sequence Endpoint");
                     map.Add("Type", "Sequence");
                     map.Add("Message", "Sequence " + sequencePath + " not found.");
@@ -291,7 +310,7 @@ namespace Nalarium.Web.Processing
         //- $EnsureSequenceUsesSequencePageControl -//
         private void EnsureSequenceUsesSequencePageControl(String path)
         {
-            Nalarium.Web.Processing.Sequence.Page sequencePage = this.Page as Nalarium.Web.Processing.Sequence.Page;
+            var sequencePage = Page as Sequence.Page;
             if (IsSequence)
             {
                 if (sequencePage == null)
@@ -307,5 +326,16 @@ namespace Nalarium.Web.Processing
                 }
             }
         }
+
+        #region Nested type: Info
+
+        internal static class Info
+        {
+            public const String MatchText = "MatchText";
+            public const String MatchType = "MatchType";
+            public const String IsSequence = "IsSequence";
+        }
+
+        #endregion
     }
 }

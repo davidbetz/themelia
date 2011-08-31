@@ -1,29 +1,21 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Web;
-//+
+using Nalarium.Web.Processing.Configuration;
 using Nalarium.Web.Processing.Data;
 //+
+
 namespace Nalarium.Web.Processing
 {
     public static class RouteActivator
     {
         //- ~Info -//
-        public static class Info
-        {
-            public const String Scope = "__$Nalarium$Processing";
-            //+
-            internal const String OriginalText = "OriginalText";
-            internal const String OriginalSelector = "OriginalSelector";
-            internal const String PassThroughForceUse = "PassThroughForceUse";
-            public const String Text = "Text";
-            public const String Selector = "Selector";
-            //public const String ReferenceKey = "ReferenceKey";
-            public const String MatchWithoutTrailingSlash = "MatchWithoutTrailingSlash";
-        }
 
         //+ field
         internal static Boolean IsInitialized;
@@ -37,12 +29,12 @@ namespace Nalarium.Web.Processing
             WebDomainData activeData = NalariumContext.Current.WebDomain.Configuration;
             //+ ensure missing slash text
             activeData.EndpointDataList.ForEach(p =>
-            {
-                if (String.IsNullOrEmpty(p.TextWithoutSlash))
-                {
-                    p.TextWithoutSlash = EndpointData.GetTextWithoutSlash(p.Text);
-                }
-            });
+                                                {
+                                                    if (String.IsNullOrEmpty(p.TextWithoutSlash))
+                                                    {
+                                                        p.TextWithoutSlash = EndpointData.GetTextWithoutSlash(p.Text);
+                                                    }
+                                                });
             //+
             //ProcessorRunner.RunSorting(activeData);
             //+
@@ -60,7 +52,7 @@ namespace Nalarium.Web.Processing
                 return null;
             }
             //+
-            Endpoint endpointContextData = new Endpoint();
+            var endpointContextData = new Endpoint();
             NalariumContext nalariumContext = NalariumContext.Current;
             //+ mid processing
             IHttpHandler hh = new PageProtectionSelectionProcessor().Execute(null);
@@ -76,12 +68,12 @@ namespace Nalarium.Web.Processing
                 }
             }
             //+ router
-            HttpHandlerSelector router = new HttpHandlerSelector
-            {
-                //HandlerFactoryMap = RouteCache.HandlerFactoryCache
-            };
+            var router = new HttpHandlerSelector
+                         {
+                             //HandlerFactoryMap = RouteCache.HandlerFactoryCache
+                         };
             String originalText = String.Empty;
-            SelectorType originalType = (SelectorType)0;
+            var originalType = (SelectorType)0;
             //+ selection
             if (hh != null)
             {
@@ -125,11 +117,11 @@ namespace Nalarium.Web.Processing
                                 endpointContextData.ParameterMap = ep.ParameterMap;
                                 endpointContextData.ParameterValue = ep.ParameterValue;
                                 //+
-                                HttpData.SetScopedItem<String>(Info.Scope, Info.OriginalText, originalText);
-                                HttpData.SetScopedItem<SelectorType>(Info.Scope, Info.OriginalSelector, originalType);
-                                HttpData.SetScopedItem<String>(Info.Scope, Info.Text, endpoint.Text);
-                                HttpData.SetScopedItem<SelectorType>(Info.Scope, Info.Selector, endpoint.Selector);
-                                HttpData.SetScopedItem<Boolean>(Info.Scope, Info.MatchWithoutTrailingSlash, matchWithoutTrailingSlash);
+                                HttpData.SetScopedItem(Info.Scope, Info.OriginalText, originalText);
+                                HttpData.SetScopedItem(Info.Scope, Info.OriginalSelector, originalType);
+                                HttpData.SetScopedItem(Info.Scope, Info.Text, endpoint.Text);
+                                HttpData.SetScopedItem(Info.Scope, Info.Selector, endpoint.Selector);
+                                HttpData.SetScopedItem(Info.Scope, Info.MatchWithoutTrailingSlash, matchWithoutTrailingSlash);
                                 //+
                                 break;
                             }
@@ -138,7 +130,7 @@ namespace Nalarium.Web.Processing
                         {
                             if (WebProcessingReportController.Reporter.Initialized)
                             {
-                                Map map = new Map();
+                                var map = new Map();
                                 map.Add("Section", "Endpoint");
                                 map.Add("Name", endpoint.Type);
                                 map.Add("MatchText", endpoint.Text);
@@ -162,8 +154,8 @@ namespace Nalarium.Web.Processing
                 }
                 else
                 {
-                    HttpData.SetScopedItem<String>(Info.Scope, Info.Text, "*");
-                    HttpData.SetScopedItem<SelectorType>(Info.Scope, Info.Selector, activeData.CatchAllEndpoint.Selector);
+                    HttpData.SetScopedItem(Info.Scope, Info.Text, "*");
+                    HttpData.SetScopedItem(Info.Scope, Info.Selector, activeData.CatchAllEndpoint.Selector);
                 }
             }
             //+
@@ -177,7 +169,7 @@ namespace Nalarium.Web.Processing
                     //+
                     endpointContextData.SetMode = EndpointSetMode.Override;
                     endpointContextData.Text = String.Empty;
-                    endpointContextData.Selector = (SelectorType)0;
+                    endpointContextData.Selector = 0;
                     endpointContextData.MatchWithoutTrailingSlash = false;
                 }
             }
@@ -199,8 +191,9 @@ namespace Nalarium.Web.Processing
         //- $TryCreateAndInit -//
         private static EndpointData TryCreateAndInit(HttpHandlerSelector router, EndpointData endpoint, out IHttpHandler hh)
         {
-            return TryCreateAndInit(router, endpoint, false, out  hh);
+            return TryCreateAndInit(router, endpoint, false, out hh);
         }
+
         private static EndpointData TryCreateAndInit(HttpHandlerSelector router, EndpointData endpoint, Boolean withoutSlash, out IHttpHandler hh)
         {
             return router.MatchHttpHandler(endpoint, withoutSlash, out hh);
@@ -209,7 +202,7 @@ namespace Nalarium.Web.Processing
         //- ~RunSystemInitInitProcessors -//
         internal static void RunSystemInitProcessors()
         {
-            if (!RouteActivator.IsInitialized)
+            if (!IsInitialized)
             {
                 lock (_lock)
                 {
@@ -219,14 +212,14 @@ namespace Nalarium.Web.Processing
                     new ScannedTypeCacheInitProcessor().Execute();
                     //+
                     Boolean disableProcessing = false;
-                    Nalarium.Web.Processing.Configuration.ProcessingSection section = Nalarium.Web.Processing.Configuration.ProcessingSection.GetConfigSection();
+                    ProcessingSection section = ProcessingSection.GetConfigSection();
                     if (section != null)
                     {
                         disableProcessing = section.DisableProcessing;
                     }
-                    HttpData.SetScopedItem<Boolean>(Info.Scope, CoreModule.Info.DisableProcessing, disableProcessing);
+                    HttpData.SetScopedItem(Info.Scope, CoreModule.Info.DisableProcessing, disableProcessing);
                     //+
-                    RouteActivator.IsInitialized = true;
+                    IsInitialized = true;
                 }
             }
         }
@@ -235,10 +228,10 @@ namespace Nalarium.Web.Processing
         internal static void RunContextInitProcessors(HttpContext context)
         {
             //+ nalarium context
-            NalariumContext nalariumContext = new NalariumContext
-            {
-                WebDomain = new WebDomain()
-            };
+            var nalariumContext = new NalariumContext
+                                  {
+                                      WebDomain = new WebDomain()
+                                  };
             NalariumContext.Current = nalariumContext;
             //+ web domain selection
             new WebDomainInitProcessor().Execute();
@@ -249,11 +242,28 @@ namespace Nalarium.Web.Processing
                 return;
             }
             //+ default page
-            DefaultPageInitProcessor init = new DefaultPageInitProcessor();
+            var init = new DefaultPageInitProcessor();
             init.Initialize(Http.Context);
             init.Execute();
             //+ state
             //new StateInitProcessor().Execute();
         }
+
+        #region Nested type: Info
+
+        public static class Info
+        {
+            public const String Scope = "__$Nalarium$Processing";
+            //+
+            internal const String OriginalText = "OriginalText";
+            internal const String OriginalSelector = "OriginalSelector";
+            internal const String PassThroughForceUse = "PassThroughForceUse";
+            public const String Text = "Text";
+            public const String Selector = "Selector";
+            //public const String ReferenceKey = "ReferenceKey";
+            public const String MatchWithoutTrailingSlash = "MatchWithoutTrailingSlash";
+        }
+
+        #endregion
     }
 }

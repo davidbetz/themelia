@@ -1,32 +1,34 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
+using System.Collections.Generic;
 using System.Linq;
-//+
+using Nalarium.Web.Globalization;
+using Nalarium.Web.Processing.Configuration;
 using Nalarium.Web.Processing.Data;
 //+
+
 namespace Nalarium.Web.Processing
 {
     internal class WebDomainInitProcessor : ContextInitProcessor
     {
         //- @Setting -//
-        public static class Setting
-        {
-            public const String WebDomain = "WebDomain";
-        }
 
         //- @OnPreHttpHandlerExecute -//
         public override InitProcessor Execute()
         {
-            WebDomain webDomain = new WebDomain();
+            var webDomain = new WebDomain();
             NalariumContext.Current.WebDomain = webDomain;
             WebDomainDataList webDomainDataList = WebDomainDataList.AllWebDomainData;
             if (WebDomainDataList.AllWebDomainData.Count > 0)
             {
                 //+ subdomain
-                var subdomainData = webDomainDataList.Where(u => !String.IsNullOrEmpty(u.Subdomain) && Http.Domain.StartsWith(u.Subdomain, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                List<WebDomainData> subdomainData = webDomainDataList.Where(u => !String.IsNullOrEmpty(u.Subdomain) && Http.Domain.StartsWith(u.Subdomain, StringComparison.InvariantCultureIgnoreCase)).ToList();
                 if (subdomainData.Count > 0)
                 {
                     SelectWebDomain(subdomainData);
@@ -53,14 +55,14 @@ namespace Nalarium.Web.Processing
         }
 
         //- $SelectWebDomain -//
-        private void SelectWebDomain(System.Collections.Generic.List<WebDomainData> webDomainDataList)
+        private void SelectWebDomain(List<WebDomainData> webDomainDataList)
         {
             WebDomain webDomain = NalariumContext.Current.WebDomain;
             String path = UrlCleaner.CleanWebPathTail(Http.Root);
-            Boolean requireSlash = Nalarium.Web.Processing.Configuration.ProcessingSection.GetConfigSection().WebDomain.RequireSlash;
+            Boolean requireSlash = ProcessingSection.GetConfigSection().WebDomain.RequireSlash;
             if (Http.AbsoluteUrl.EndsWith("/"))
             {
-                var resultData = webDomainDataList.Where(u => !(String.IsNullOrEmpty(u.Path) || u.Path == "/") && Http.AbsoluteUrl.StartsWith(path + "/" + u.Path + "/", StringComparison.OrdinalIgnoreCase));
+                IEnumerable<WebDomainData> resultData = webDomainDataList.Where(u => !(String.IsNullOrEmpty(u.Path) || u.Path == "/") && Http.AbsoluteUrl.StartsWith(path + "/" + u.Path + "/", StringComparison.OrdinalIgnoreCase));
                 if (resultData.Count() > 0)
                 {
                     //++ take one with longest path, if more than one
@@ -70,7 +72,7 @@ namespace Nalarium.Web.Processing
             }
             else if (!requireSlash)
             {
-                var resultData = webDomainDataList.Where(u => !(String.IsNullOrEmpty(u.Path) || u.Path == "/") && Http.AbsoluteUrl.StartsWith(path + "/" + u.Path, StringComparison.OrdinalIgnoreCase));
+                IEnumerable<WebDomainData> resultData = webDomainDataList.Where(u => !(String.IsNullOrEmpty(u.Path) || u.Path == "/") && Http.AbsoluteUrl.StartsWith(path + "/" + u.Path, StringComparison.OrdinalIgnoreCase));
                 if (resultData.Count() > 0)
                 {
                     //++ take one with longest path, if more than one
@@ -92,7 +94,7 @@ namespace Nalarium.Web.Processing
                 case CatchAllMode.PassToDefault:
                     if (String.IsNullOrEmpty(webDomainData.DefaultParameter))
                     {
-                        throw new InvalidOperationException(Nalarium.Web.Globalization.ResourceAccessor.GetString("WebDomain_DefaultPageCatchAllModeRequiresDefaultPage"));
+                        throw new InvalidOperationException(ResourceAccessor.GetString("WebDomain_DefaultPageCatchAllModeRequiresDefaultPage"));
                     }
                     if (!webDomainData.OverrideProcessorDataList.Any(p => p.ProcessorType.Equals("__$defaultpageoverrideprocessor", StringComparison.InvariantCulture)))
                     {
@@ -133,5 +135,14 @@ namespace Nalarium.Web.Processing
                     break;
             }
         }
+
+        #region Nested type: Setting
+
+        public static class Setting
+        {
+            public const String WebDomain = "WebDomain";
+        }
+
+        #endregion
     }
 }

@@ -1,10 +1,13 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using Nalarium.Reporting;
-//+
+
 namespace Nalarium.Web.Processing
 {
     public class EmailSendingErrorProcessor : ErrorProcessor
@@ -34,7 +37,10 @@ namespace Nalarium.Web.Processing
             {
                 reporter = ReportController.Create(ReporterName, "HttpContext", "Trace", formatterType);
             }
-            reporter.SendSingle(new Object[] { "Uncaught Exception", Context });
+            reporter.SendSingle(new Object[]
+                                {
+                                    "Uncaught Exception", Context
+                                });
         }
     }
 }

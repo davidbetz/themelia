@@ -1,9 +1,13 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Web;
+
 namespace Nalarium.Web.Processing
 {
     /// <summary>
@@ -15,7 +19,7 @@ namespace Nalarium.Web.Processing
 
         //+
         //- #Context -//
-        protected System.Web.HttpContext Context { get; set; }
+        protected HttpContext Context { get; set; }
 
         //- #ParameterArray -//
         protected Object[] ParameterArray { get; set; }
@@ -25,17 +29,17 @@ namespace Nalarium.Web.Processing
 
         //+
         //- ~Initialize -//
-        internal void Initialize(System.Web.HttpContext context, Exception error, params Object[] parameterArray)
+        internal void Initialize(HttpContext context, Exception error, params Object[] parameterArray)
         {
-            this.Context = context;
-            this.ParameterArray = parameterArray;
-            this.Error = error;
+            Context = context;
+            ParameterArray = parameterArray;
+            Error = error;
         }
 
         //- @Execute -//
         /// <summary>
         /// Called when an unhandled ASP.NET exception is thrown (reminder: there is always a web domain, the default is "root"); use this method to provide custom error handling logic.
         /// </summary>
-        public abstract void Execute( );
+        public abstract void Execute();
     }
 }

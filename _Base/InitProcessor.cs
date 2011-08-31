@@ -1,9 +1,13 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Web;
+
 namespace Nalarium.Web.Processing
 {
     /// <summary>
@@ -18,23 +22,23 @@ namespace Nalarium.Web.Processing
         internal Boolean IsChained { get; set; }
 
         //- #Context -//
-        protected System.Web.HttpContext Context { get; set; }
+        protected HttpContext Context { get; set; }
 
         //- #ParameterArray -//
         protected Object[] ParameterArray { get; set; }
 
         //+
         //- ~Initialize -//
-        internal void Initialize(System.Web.HttpContext context, params Object[] parameterArray)
+        internal void Initialize(HttpContext context, params Object[] parameterArray)
         {
-            this.Context = context;
-            this.ParameterArray = parameterArray;
+            Context = context;
+            ParameterArray = parameterArray;
         }
 
         //- @Execute -//
         /// <summary>
         /// Runs the pre-processor; which runs before any other custom processor
         /// </summary>
-        public abstract InitProcessor Execute( );
+        public abstract InitProcessor Execute();
     }
 }

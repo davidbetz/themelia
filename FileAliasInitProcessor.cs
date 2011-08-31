@@ -1,13 +1,17 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-//+
 using Nalarium.Web.Processing.Data;
 //+
+
 namespace Nalarium.Web.Processing
 {
     internal class FileAliasInitProcessor : InitProcessor
@@ -70,7 +74,7 @@ namespace Nalarium.Web.Processing
                 if (matchType == SelectorType.WebDomainPathEquals ||
                     matchType == SelectorType.EndsWith ||
                     matchType == SelectorType.PathEquals ||
-                    System.IO.File.Exists(target))
+                    File.Exists(target))
                 {
                     if (!String.IsNullOrEmpty(contentType))
                     {

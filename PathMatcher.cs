@@ -1,10 +1,15 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
-//+
+using Nalarium.Configuration;
+
 namespace Nalarium.Web.Processing
 {
     /// <summary>
@@ -21,15 +26,21 @@ namespace Nalarium.Web.Processing
         /// <returns>true is there is a match, false if not</returns>
         public static Boolean Match(SelectorType type, String text)
         {
-            if (text == "*") { return true; }
+            if (text == "*")
+            {
+                return true;
+            }
             //if (String.IsNullOrEmpty(type)) { return false; }
-            if (String.IsNullOrEmpty(text)) { return false; }
+            if (String.IsNullOrEmpty(text))
+            {
+                return false;
+            }
             //+
             //type = type.ToLower(System.Globalization.CultureInfo.CurrentCulture);
-            text = UrlCleaner.CleanWebPathHead(text).ToLower(System.Globalization.CultureInfo.CurrentCulture);
-            text = text.Replace("~", Nalarium.Configuration.ConfigAccessor.ApplicationSettings("Domain", false));
+            text = UrlCleaner.CleanWebPathHead(text).ToLower(CultureInfo.CurrentCulture);
+            text = text.Replace("~", ConfigAccessor.ApplicationSettings("Domain", false));
             //+
-            String reference = PathMatcher.GetReference(type).ToLower(System.Globalization.CultureInfo.CurrentCulture);
+            String reference = GetReference(type).ToLower(CultureInfo.CurrentCulture);
             if (type == SelectorType.Contains || type == SelectorType.PathContains)
             {
                 return MatchContains(reference, text);
@@ -89,15 +100,15 @@ namespace Nalarium.Web.Processing
         //- @Substitute -//
         public static String Substitute(SelectorType type, String matchText, String target)
         {
-            Regex ex = new Regex(matchText, RegexOptions.IgnoreCase);
-            String path = PathMatcher.GetReference(type);
+            var ex = new Regex(matchText, RegexOptions.IgnoreCase);
+            String path = GetReference(type);
             Match m = ex.Match(path);
             if (m.Groups.Count > 1)
             {
                 for (Int32 i = 1; i < m.Groups.Count; i++)
                 {
                     Group g = m.Groups[i];
-                    target = target.Replace("$" + i.ToString(System.Globalization.CultureInfo.CurrentCulture), g.Value);
+                    target = target.Replace("$" + i.ToString(CultureInfo.CurrentCulture), g.Value);
                 }
             }
             //+
@@ -108,15 +119,15 @@ namespace Nalarium.Web.Processing
         public static Map GetQueryStringVariableMap(SelectorType type, String matchText, String target, out String newTarget)
         {
             newTarget = target;
-            Regex ex = new Regex(UrlCleaner.CleanWebPathHead(matchText), RegexOptions.IgnoreCase);
-            String path = PathMatcher.GetReference(type);
+            var ex = new Regex(UrlCleaner.CleanWebPathHead(matchText), RegexOptions.IgnoreCase);
+            String path = GetReference(type);
             Match m = ex.Match(path);
             if (m.Groups.Count > 1)
             {
                 for (Int32 i = 1; i < m.Groups.Count; i++)
                 {
                     Group g = m.Groups[i];
-                    newTarget = newTarget.Replace("$" + i.ToString(System.Globalization.CultureInfo.CurrentCulture), g.Value);
+                    newTarget = newTarget.Replace("$" + i.ToString(CultureInfo.CurrentCulture), g.Value);
                 }
             }
             String queryString = String.Empty;

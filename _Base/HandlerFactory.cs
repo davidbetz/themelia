@@ -1,9 +1,13 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Web;
+
 namespace Nalarium.Web.Processing
 {
     public abstract class HandlerFactory : IFactory
@@ -17,6 +21,6 @@ namespace Nalarium.Web.Processing
         /// </summary>
         /// <param name="text">The handler alias.</param>
         /// <returns>Instance of HTTP handler</returns>
-        public abstract System.Web.IHttpHandler CreateHttpHandler(String text);
+        public abstract IHttpHandler CreateHttpHandler(String text);
     }
 }

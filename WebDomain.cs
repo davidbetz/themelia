@@ -1,54 +1,43 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
-//+
 using Nalarium.Web.Processing.Data;
 //+
+
 namespace Nalarium.Web.Processing
 {
     /// <summary>
     /// Provides information regarding the current web domain.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{Name}, {Path}, {RelativeUrl}")]
-    public static class WebDomainOld
+    [DebuggerDisplay("{Name}, {PathSegment}, {RelativePath}")]
+    public class WebDomain
     {
         //- ~Info -//
-        internal static class Info
-        {
-            public const String ActiveData = "ActiveData";
-            public const String WebDomain = "WebDomain";
-        }
+
+        private static readonly Object _lock = new Object();
 
         //+
-        //- ~CurrentData -//
+        //- ~Configuration -//
         /// <summary>
         /// Gets the current web domain information
         /// </summary>
         /// <value>The current web domain information</value>
-        public static WebDomainData Current
-        {
-            get
-            {
-                return HttpData.GetScopedItem<WebDomainData>(Nalarium.Web.Processing.RouteActivator.Info.Scope, Info.ActiveData);
-            }
-            set
-            {
-                if (value != null)
-                {
-                    HttpData.SetScopedItem<WebDomainData>(Nalarium.Web.Processing.RouteActivator.Info.Scope, Info.ActiveData, value);
-                }
-            }
-        }
+        public WebDomainData Configuration { get; set; }
 
         //- @IsRoot -//
         /// <summary>
         /// Gets a value indicating whether this instance is root.
         /// </summary>
         /// <value><c>true</c> if this instance is root; otherwise, <c>false</c>.</value>
-        public static Boolean IsRoot
+        public Boolean IsRoot
         {
             get
             {
@@ -56,29 +45,101 @@ namespace Nalarium.Web.Processing
             }
         }
 
-        //- @GetCleanWebDomain -//
+        //- @Name -//
         /// <summary>
-        /// Returns the name of the current web domain.
+        /// Gets the current web domain name.
         /// </summary>
-        /// <returns>The name of the web domain; blank if "root"</returns>
-        public static String GetCleanWebDomain()
+        /// <value>The current web domain name.</value>
+        public String Name
         {
-            String name = NalariumContext.Current.WebDomain.Configuration.Name;
-            if (name == "root")
+            get
             {
-                return String.Empty;
+                return Configuration.Name;
             }
-            //+
-            return name;
         }
+
+        //- @PathSegment -//
         /// <summary>
-        /// Returns the name of the current web domain.
+        /// Gets the current web domain path segment.
         /// </summary>
-        /// <param name="webDomainName">The web domain name.</param>
-        /// <returns>The name of the web domain; blank if "root"</returns>
-        public static String GetCleanWebDomain(String webDomainName)
+        public String PathSegment
         {
-            WebDomainData data = WebDomainOld.GetWebDomainData(webDomainName);
+            get
+            {
+                return Configuration.Path;
+            }
+        }
+
+        //- @FullUrl -//
+        /// <summary>
+        /// Gets the full web domain path.
+        /// </summary>
+        public String FullUrl
+        {
+            get
+            {
+                return Http.Root + "/" + UrlCleaner.CleanWebPath(PathSegment);
+            }
+        }
+
+        //- @PathPartArray -//
+        /// <summary>
+        /// Gets the current web domain path part array.
+        /// </summary>
+        public String[] PathPartArray
+        {
+            get
+            {
+                return RelativePath.ToLower(CultureInfo.CurrentCulture).Split('/').Where(p => !String.IsNullOrEmpty(p)).ToArray();
+            }
+        }
+
+        //- @RelativePathOriginalCase -//
+        /// <summary>
+        /// Gets the current URL relative to the web domain root with the original casing.
+        /// </summary>
+        /// <returns>Relative URL for the current web domain.</returns>
+        public String RelativePathOriginalCase
+        {
+            get
+            {
+                String absoluteUrl = Http.AbsoluteUrlOriginalCase;
+                String webDomainUrl = String.Empty;
+                if (String.IsNullOrEmpty(GetCleanWebDomain(NalariumContext.Current.WebDomain.Configuration.Name)))
+                {
+                    webDomainUrl = Http.Root + "/";
+                }
+                else
+                {
+                    webDomainUrl = Http.Root + "/" + NalariumContext.Current.WebDomain.Configuration.Path + "/";
+                }
+                Int32 offset = (Configuration.FoundWithoutTrailingSlash ? 1 : 0);
+                if (absoluteUrl.Length >= webDomainUrl.Length - offset)
+                {
+                    return absoluteUrl.Substring(webDomainUrl.Length - offset, absoluteUrl.Length - webDomainUrl.Length + offset);
+                }
+                //+
+                return absoluteUrl;
+            }
+        }
+
+        //- @RelativePath -//
+        /// <summary>
+        /// Gets the current URL relative to the web domain root.
+        /// </summary>
+        /// <returns>Relative URL for the current web domain.</returns>
+        public String RelativePath
+        {
+            get
+            {
+                return RelativePathOriginalCase.ToLower();
+            }
+        }
+
+        //- $GetCleanWebDomain -//
+        private static String GetCleanWebDomain(String webDomainName)
+        {
+            WebDomainData data = GetWebDomainData(webDomainName);
             if (data != null)
             {
                 String name = data.Name;
@@ -93,191 +154,10 @@ namespace Nalarium.Web.Processing
             return null;
         }
 
-        //- @Name -//
-        /// <summary>
-        /// Gets the current web domain name.
-        /// </summary>
-        /// <value>The current web domain name.</value>
-        public static String Name
+        //- $GetWebDomainData -//
+        private static WebDomainData GetWebDomainData(String webDomainName)
         {
-            get
-            {
-                return Current.Name;
-            }
-        }
-
-        //- @PathWithLeadingSlash -//
-        /// <summary>
-        /// Gets the current web domain path with conditional leading slash 
-        /// </summary>
-        /// <value>The current web domain raw path with leading slash if the current web domain is not root, otherwise a blank string</value>
-        public static String PathWithLeadingSlash
-        {
-            get
-            {
-                if (String.IsNullOrEmpty(Current.Path))
-                {
-                    return String.Empty;
-                }
-                //+
-                return "/" + Current.Path;
-            }
-        }
-
-        //- @Path -//
-        /// <summary>
-        /// Gets the current web domain path.
-        /// </summary>
-        /// <value>The current web domain raw path.</value>
-        public static String Path
-        {
-            get
-            {
-                return Current.Path;
-            }
-        }
-
-        //- @PathPartArray -//
-        /// <summary>
-        /// Gets the current web domain path part array.
-        /// </summary>
-        public static String[] PathPartArray
-        {
-            get
-            {
-                return RelativeUrl.ToLower(System.Globalization.CultureInfo.CurrentCulture).Split('/').Where(p => !String.IsNullOrEmpty(p)).ToArray();
-            }
-        }
-
-        //+
-        //- @Uri -//
-        /// <summary>
-        /// Gets the current web domain URI.
-        /// </summary>
-        /// <returns>Uri instance representing the current web domain.</returns>
-        public static Uri Uri
-        {
-            get
-            {
-                return GetUri(WebDomainOld.Path);
-            }
-        }
-
-        //- @RelativeUrl -//
-        /// <summary>
-        /// Gets the current URL relative to the web domain root.
-        /// </summary>
-        /// <returns>Relative URL for the current web domain.</returns>
-        public static String RelativeUrl
-        {
-            get
-            {
-                String absoluteUrl = Http.AbsoluteUrl;
-                String webDomainUrl = Url;
-                Int32 offset = (NalariumContext.Current.WebDomain.Configuration.FoundWithoutTrailingSlash ? 1 : 0);
-                if (absoluteUrl.Length >= webDomainUrl.Length - offset)
-                {
-                    return absoluteUrl.Substring(webDomainUrl.Length - offset, absoluteUrl.Length - webDomainUrl.Length + offset);
-                }
-                //+
-                return absoluteUrl;
-            }
-        }
-
-        //- @Url -//
-        /// <summary>
-        /// Gets the current web domain URL.
-        /// </summary>
-        /// <returns>Url for the current web domain.</returns>
-        public static String Url
-        {
-            get
-            {
-                return GetUrl();
-            }
-        }
-
-        //- @GetUri -//
-        /// <summary>
-        /// Gets the current web domain URI.
-        /// </summary>
-        /// <returns>Uri instance representing the current web domain.</returns>
-        public static Uri GetUri()
-        {
-            return new Uri(GetUrl(NalariumContext.Current.WebDomain.Configuration.Path));
-        }
-        /// <summary>
-        /// Gets the web domain URI for a particular web domain
-        /// </summary>
-        /// <param name="webDomainName">The web domain name.</param>
-        /// <returns>Uri instance representing a particular web domain.</returns>
-        public static Uri GetUri(String webDomainName)
-        {
-            WebDomainData data = GetWebDomainData(webDomainName);
-            if (data != null)
-            {
-                return new Uri(GetUrl(data.Path));
-            }
-            //+
-            return null;
-        }
-
-        //- @GetUrl -//
-        /// <summary>
-        /// Gets the current web domain URL.
-        /// </summary>
-        /// <returns>Url for the current web domain.</returns>
-        public static String GetUrl()
-        {
-            String url;
-            if (String.IsNullOrEmpty(GetCleanWebDomain(NalariumContext.Current.WebDomain.Configuration.Name)))
-            {
-                url = Http.Root + "/";
-            }
-            else
-            {
-                url = Http.Root + "/" + NalariumContext.Current.WebDomain.Configuration.Path + "/";
-            }
-            //+
-            return url;
-        }
-        /// <summary>
-        /// Gets the current web domain URL.
-        /// </summary>
-        /// <param name="webDomainName">The web domain name.</param>
-        /// <returns>Url for a particular web domain.</returns>
-        public static String GetUrl(String webDomainName)
-        {
-            WebDomainData data = GetWebDomainData(webDomainName);
-            if (data != null)
-            {
-                String url;
-                if (String.IsNullOrEmpty(GetCleanWebDomain(data.Path)))
-                {
-                    url = Http.Root + "/";
-                }
-                else
-                {
-                    url = Http.Root + "/" + data.Path + "/";
-                }
-                //+
-                return url;
-            }
-            //+
-            return String.Empty;
-        }
-
-        //- @GetWebDomainData -//
-        /// <summary>
-        /// Returns the WebDomainData object for a particular web domain. 
-        /// </summary>
-        /// <param name="webDomainName">The web domain name used to lookup the web domain.</param>
-        /// <returns>A WebDomainData object or null if the web domain name is invalid.</returns>
-        public static WebDomainData GetWebDomainData(String webDomainName)
-        {
-            System.Threading.ReaderWriterLock readerWriterLock = new System.Threading.ReaderWriterLock();
-            readerWriterLock.AcquireReaderLock(System.Threading.Timeout.Infinite);
-            try
+            lock (_lock)
             {
                 if (String.IsNullOrEmpty(webDomainName))
                 {
@@ -286,10 +166,16 @@ namespace Nalarium.Web.Processing
                 //+
                 return WebDomainDataList.AllWebDomainData.SingleOrDefault(p => p.Name == webDomainName);
             }
-            finally
-            {
-                readerWriterLock.ReleaseReaderLock();
-            }
         }
+
+        #region Nested type: Info
+
+        internal static class Info
+        {
+            public const String ActiveData = "ActiveData";
+            public const String WebDomain = "WebDomain";
+        }
+
+        #endregion
     }
 }

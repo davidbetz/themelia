@@ -1,5 +1,5 @@
 ﻿using System;
-//+
+
 namespace Nalarium.Web.Processing.Sequence
 {
     public interface IInitializer

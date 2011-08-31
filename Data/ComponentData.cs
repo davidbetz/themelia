@@ -1,16 +1,20 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Diagnostics;
+
 namespace Nalarium.Web.Processing.Data
 {
-    [System.Diagnostics.DebuggerDisplay("{ComponentType}, {Key}, IsInstalled: {IsInstalled}")]
+    [DebuggerDisplay("{ComponentType}, {Key}, IsInstalled: {IsInstalled}")]
     public class ComponentData
     {
         //- ~IsInstalled -//
-        internal Boolean IsInstalled {get;set;}
+        internal Boolean IsInstalled { get; set; }
 
         //- @ComponentType -//
         public String ComponentType { get; set; }

@@ -1,16 +1,20 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Configuration;
-//+
+using ConfigurationSection = Nalarium.Configuration.ConfigurationSection;
+
 namespace Nalarium.Web.Processing.Configuration
 {
     /// <summary>
     /// Provides access to the configuration section.
     /// </summary>
-    public class ProcessingSection : Nalarium.Configuration.ConfigurationSection
+    public class ProcessingSection : ConfigurationSection
     {
         //- ~EnableConfigViewer -//
         [ConfigurationProperty("enableConfigViewer")]

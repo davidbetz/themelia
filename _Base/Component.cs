@@ -1,22 +1,25 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
 using Nalarium.Web.Processing.Data;
 //+
+
 namespace Nalarium.Web.Processing
 {
     public abstract class Component
     {
         internal static Type _Type = typeof(Component);
+        private EndpointDataList _endpointDataList;
         //+
-        private String key;
         //+
         private FactoryDataList _factoryDataList;
         private ProcessorDataList _processorDataList;
-        private EndpointDataList _endpointDataList;
+        private String key;
 
         //+
         //- @Key -//
@@ -25,7 +28,10 @@ namespace Nalarium.Web.Processing
         /// </summary>
         public String Key
         {
-            get { return key; }
+            get
+            {
+                return key;
+            }
             set
             {
                 //+ only set once

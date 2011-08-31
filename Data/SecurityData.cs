@@ -1,18 +1,22 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Diagnostics;
 using Nalarium.Web.Security;
 //+
+
 namespace Nalarium.Web.Processing.Data
 {
-    [System.Diagnostics.DebuggerDisplay("{Key}")]
+    [DebuggerDisplay("{Key}")]
     public class SecurityData
     {
         //- @SecurityValidator -//
-        internal static Nalarium.Web.Security.ISecurityValidator SecurityValidator;
+        internal static ISecurityValidator SecurityValidator;
 
         //+
         //- @DefaultAccessMode -//
@@ -46,17 +50,17 @@ namespace Nalarium.Web.Processing.Data
         internal SecurityData Clone()
         {
             return new SecurityData
-            {
-                DefaultAccessMode = this.DefaultAccessMode,
-                Disabled = this.Disabled,
-                LoginText = this.LoginText,
-                LogoutText = this.LogoutText,
-                LoginPage = this.LoginPage,
-                LogoutPage = this.LogoutPage,
-                ValidatorType = this.ValidatorType,
-                DefaultLoggedInTarget = this.DefaultLoggedInTarget,
-                SecurityExceptionDataList = this.SecurityExceptionDataList != null ? this.SecurityExceptionDataList.Clone() : null
-            };
+                   {
+                       DefaultAccessMode = DefaultAccessMode,
+                       Disabled = Disabled,
+                       LoginText = LoginText,
+                       LogoutText = LogoutText,
+                       LoginPage = LoginPage,
+                       LogoutPage = LogoutPage,
+                       ValidatorType = ValidatorType,
+                       DefaultLoggedInTarget = DefaultLoggedInTarget,
+                       SecurityExceptionDataList = SecurityExceptionDataList != null ? SecurityExceptionDataList.Clone() : null
+                   };
         }
     }
 }

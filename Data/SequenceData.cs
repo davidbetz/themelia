@@ -1,12 +1,16 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Diagnostics;
+
 namespace Nalarium.Web.Processing.Data
 {
-    [System.Diagnostics.DebuggerDisplay("{Name}")]
+    [DebuggerDisplay("{Name}")]
     public class SequenceData
     {
         //- @Key -//
@@ -21,7 +25,7 @@ namespace Nalarium.Web.Processing.Data
         //- ~CreateBlank -//
         internal static SequenceData CreateBlank()
         {
-            SequenceData data =new SequenceData();
+            var data = new SequenceData();
             data.ViewList = new ViewDataList();
             data.VersionList = new VersionDataList();
             data.Name = String.Empty;

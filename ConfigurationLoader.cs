@@ -1,26 +1,31 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
-//+
+using Nalarium.Activation;
 using Nalarium.Configuration;
+using Nalarium.Web.Globalization;
 using Nalarium.Web.Processing.Configuration;
 using Nalarium.Web.Processing.Data;
+using Nalarium.Web.Security;
+using ParameterCollection = Nalarium.Web.Processing.Configuration.ParameterCollection;
+using ParameterElement = Nalarium.Configuration.ParameterElement;
 //+
+
 namespace Nalarium.Web.Processing
 {
     internal static class ConfigurationLoader
     {
         //- ~Info -//
-        internal class Info
-        {
-            public const String System = "System";
-            public const String Root = "root";
-        }
 
         //+
         private static ReaderWriterLockSlim readerWriterLockSlim = new ReaderWriterLockSlim();
@@ -35,12 +40,12 @@ namespace Nalarium.Web.Processing
             {
                 if (String.IsNullOrEmpty(webDomainElement.Path) && String.IsNullOrEmpty(webDomainElement.Subdomain))
                 {
-                    throw new System.Configuration.ConfigurationErrorsException(Resource.WebDomain_PathAndSubdomainNotFound);
+                    throw new ConfigurationErrorsException(Resource.WebDomain_PathAndSubdomainNotFound);
                 }
             }
             if (!String.IsNullOrEmpty(webDomainElement.BasedOn))
             {
-                data = CopyWebDomain(webDomainElement.BasedOn.ToLower(System.Globalization.CultureInfo.CurrentCulture), webDomainDataList);
+                data = CopyWebDomain(webDomainElement.BasedOn.ToLower(CultureInfo.CurrentCulture), webDomainDataList);
                 if (data == null)
                 {
                     throw new InvalidOperationException(String.Format(Resource.WebDomain_Invalid, webDomainElement.BasedOn));
@@ -92,7 +97,7 @@ namespace Nalarium.Web.Processing
             }
             else
             {
-                data.Path = UrlCleaner.CleanWebPath(webDomainElement.Path.ToLower(System.Globalization.CultureInfo.CurrentCulture));
+                data.Path = UrlCleaner.CleanWebPath(webDomainElement.Path.ToLower(CultureInfo.CurrentCulture));
                 data.Subdomain = webDomainElement.Subdomain;
             }
             data.IsSealed = webDomainElement.IsSealed;
@@ -260,14 +265,14 @@ namespace Nalarium.Web.Processing
             if (securityElement.Disabled || securityElement.DefaultAccessMode == null)
             {
                 data.SecurityData = new SecurityData
-                {
-                    Disabled = true
-                };
+                                    {
+                                        Disabled = true
+                                    };
                 //+
                 return;
             }
             data.SecurityData.Disabled = false;
-            data.SecurityData.DefaultAccessMode = securityElement.DefaultAccessMode ?? Nalarium.Web.Security.DefaultAccessMode.Block;
+            data.SecurityData.DefaultAccessMode = securityElement.DefaultAccessMode ?? DefaultAccessMode.Block;
             data.SecurityData.ValidatorType = securityElement.ValidatorType;
             data.SecurityData.LoginText = securityElement.LoginText;
             data.SecurityData.LogoutText = securityElement.LogoutText;
@@ -275,7 +280,7 @@ namespace Nalarium.Web.Processing
             SecurityExceptionCollection collection = securityElement.Exceptions;
             if (String.IsNullOrEmpty(securityElement.LoginPage))
             {
-                throw new ArgumentException(Nalarium.Web.Globalization.ResourceAccessor.GetString("Security_LoginTargetRequired"));
+                throw new ArgumentException(ResourceAccessor.GetString("Security_LoginTargetRequired"));
             }
             data.SecurityData.LoginPage = securityElement.LoginPage;
             data.SecurityData.LogoutPage = securityElement.LogoutPage;
@@ -287,9 +292,9 @@ namespace Nalarium.Web.Processing
                     continue;
                 }
                 data.SecurityData.SecurityExceptionDataList.Add(new SecurityExceptionData
-                {
-                    Key = element.Key
-                });
+                                                                {
+                                                                    Key = element.Key
+                                                                });
             }
             String type;
             if (data.SecurityData.LoginText.StartsWith("{"))
@@ -301,23 +306,23 @@ namespace Nalarium.Web.Processing
                 type = "page";
             }
             data.EndpointDataList.Insert(0, new EndpointData
-            {
-                Type = type,
-                Text = UrlCleaner.CleanWebPathTail(data.SecurityData.LoginText) + "/",
-                TextWithoutSlash = UrlCleaner.CleanWebPathTail(data.SecurityData.LoginText),
-                Selector = SelectorType.EndsWith,
-                ParameterValue = data.SecurityData.LoginPage
-            });
+                                            {
+                                                Type = type,
+                                                Text = UrlCleaner.CleanWebPathTail(data.SecurityData.LoginText) + "/",
+                                                TextWithoutSlash = UrlCleaner.CleanWebPathTail(data.SecurityData.LoginText),
+                                                Selector = SelectorType.EndsWith,
+                                                ParameterValue = data.SecurityData.LoginPage
+                                            });
             if (!String.IsNullOrEmpty(data.SecurityData.LogoutPage))
             {
                 data.EndpointDataList.Insert(0, new EndpointData
-                {
-                    Type = type,
-                    Text = UrlCleaner.CleanWebPathTail(data.SecurityData.LogoutText) + "/",
-                    TextWithoutSlash = UrlCleaner.CleanWebPathTail(data.SecurityData.LogoutText),
-                    Selector = SelectorType.EndsWith,
-                    ParameterValue = data.SecurityData.LogoutPage
-                });
+                                                {
+                                                    Type = type,
+                                                    Text = UrlCleaner.CleanWebPathTail(data.SecurityData.LogoutText) + "/",
+                                                    TextWithoutSlash = UrlCleaner.CleanWebPathTail(data.SecurityData.LogoutText),
+                                                    Selector = SelectorType.EndsWith,
+                                                    ParameterValue = data.SecurityData.LogoutPage
+                                                });
             }
         }
 
@@ -336,11 +341,11 @@ namespace Nalarium.Web.Processing
                     parameterDataList = GetComponentParameterData(element.Parameters);
                     //+
                     activeComponent = new ComponentData
-                    {
-                        ComponentType = componentType,
-                        Key = key,
-                        ParameterDataList = parameterDataList
-                    };
+                                      {
+                                          ComponentType = componentType,
+                                          Key = key,
+                                          ParameterDataList = parameterDataList
+                                      };
                     //+ No base
                     data.ComponentDataList.Add(activeComponent);
                 }
@@ -368,7 +373,7 @@ namespace Nalarium.Web.Processing
                     }
                     Boolean hasDifferentParameter = false;
                     ComponentParameterCollection parameterCollection = newElement.Parameters;
-                    foreach (Nalarium.Configuration.ParameterElement parameterElement in parameterCollection)
+                    foreach (ParameterElement parameterElement in parameterCollection)
                     {
                         ParameterData existingParameterData = parameterDataList.FirstOrDefault(p => p.Name == parameterElement.Name);
                         if (existingParameterData != null)
@@ -388,7 +393,7 @@ namespace Nalarium.Web.Processing
                 //+
                 try
                 {
-                    Component component = Nalarium.Activation.ObjectCreator.CreateAs<Component>(componentType);
+                    var component = ObjectCreator.CreateAs<Component>(componentType);
                     if (component == null)
                     {
                         throw new EntityNotFoundException(String.Format(Resource.General_NotFound, componentType));
@@ -410,7 +415,7 @@ namespace Nalarium.Web.Processing
                 {
                     if (WebProcessingReportController.Reporter.Initialized)
                     {
-                        Map map = new Map();
+                        var map = new Map();
                         map.Add("Section", "Component");
                         map.Add("Type", componentType);
                         map.Add("Message", ex.Message);
@@ -438,7 +443,7 @@ namespace Nalarium.Web.Processing
         }
 
         //- ~LoadFactoryData -//
-        internal static void LoadFactoryData(Data.WebDomainData data, FactoryCollection collection)
+        internal static void LoadFactoryData(WebDomainData data, FactoryCollection collection)
         {
             List<FactoryElement> elementList = collection.ToList();
             foreach (FactoryElement factory in elementList)
@@ -461,7 +466,7 @@ namespace Nalarium.Web.Processing
         //- $LoadSingleFactoryData -//
         private static void LoadSingleFactoryData(WebDomainData data, String factoryType, Object[] parameterArray, Map parameterMap, String source)
         {
-            ReaderWriterLockSlim readerWriterLockSlim = new ReaderWriterLockSlim();
+            var readerWriterLockSlim = new ReaderWriterLockSlim();
             try
             {
                 IFactory factory = null;
@@ -475,7 +480,7 @@ namespace Nalarium.Web.Processing
                     {
                         if (!RouteCache.HandlerFactoryCache.ContainsKey(factoryType) && !RouteCache.ProcessorFactoryCache.ContainsKey(factoryType))
                         {
-                            factory = Nalarium.Activation.ObjectCreator.CreateAs<IFactory>(factoryType);
+                            factory = ObjectCreator.CreateAs<IFactory>(factoryType);
                             if (factory == null)
                             {
                                 throw new InvalidFactoryException(String.Format(Resource.Factory_Invalid, factoryType));
@@ -505,7 +510,7 @@ namespace Nalarium.Web.Processing
             {
                 if (WebProcessingReportController.Reporter.Initialized)
                 {
-                    Map map = new Map();
+                    var map = new Map();
                     map.Add("Section", "Factory");
                     map.Add("Type", factoryType);
                     map.Add("Message", ex.Message);
@@ -521,9 +526,9 @@ namespace Nalarium.Web.Processing
         }
 
         //- ~LoadProcessorData -//
-        internal static void LoadProcessorData(Data.WebDomainData data, ProcessorCollection collection)
+        internal static void LoadProcessorData(WebDomainData data, ProcessorCollection collection)
         {
-            ReaderWriterLockSlim readerWriterLockSlim = new ReaderWriterLockSlim();
+            var readerWriterLockSlim = new ReaderWriterLockSlim();
             List<ProcessorElement> elementList = collection.ToList();
             foreach (ProcessorElement processor in elementList)
             {
@@ -545,11 +550,11 @@ namespace Nalarium.Web.Processing
             data.ErrorProcessorDataList.OriginalCount = data.ErrorProcessorDataList.Count;
         }
 
-        private static void LoadSingleProcessorData(Data.WebDomainData data, String processorType, Object[] parameterArray, String source)
+        private static void LoadSingleProcessorData(WebDomainData data, String processorType, Object[] parameterArray, String source)
         {
             ProcessEachSettingToken(parameterArray);
             //+
-            ReaderWriterLockSlim readerWriterLockSlim = new ReaderWriterLockSlim();
+            var readerWriterLockSlim = new ReaderWriterLockSlim();
             try
             {
                 readerWriterLockSlim.EnterUpgradeableReadLock();
@@ -590,39 +595,57 @@ namespace Nalarium.Web.Processing
                     ProcessorData processorData;
                     if (processor is InitProcessor)
                     {
-                        processorData = new ProcessorData { ProcessorType = processorType, ParameterArray = parameterArray };
+                        processorData = new ProcessorData
+                                        {
+                                            ProcessorType = processorType, ParameterArray = parameterArray
+                                        };
                         processorData.Source = String.IsNullOrEmpty(source) ? Info.System : source;
                         data.InitProcessorDataList.Add(processorData);
                     }
                     else if (processor is SelectionProcessor)
                     {
-                        processorData = new ProcessorData { ProcessorType = processorType, ParameterArray = parameterArray };
+                        processorData = new ProcessorData
+                                        {
+                                            ProcessorType = processorType, ParameterArray = parameterArray
+                                        };
                         processorData.Source = String.IsNullOrEmpty(source) ? Info.System : source;
                         data.SelectionProcessorDataList.Add(processorData);
                     }
                     else if (processor is OverrideProcessor)
                     {
-                        processorData = new ProcessorData { ProcessorType = processorType, ParameterArray = parameterArray };
+                        processorData = new ProcessorData
+                                        {
+                                            ProcessorType = processorType, ParameterArray = parameterArray
+                                        };
                         processorData.Source = String.IsNullOrEmpty(source) ? Info.System : source;
                         data.OverrideProcessorDataList.Add(processorData);
                     }
                     else if (processor is StateProcessor)
                     {
-                        processorData = new ProcessorData { ProcessorType = processorType, ParameterArray = parameterArray };
+                        processorData = new ProcessorData
+                                        {
+                                            ProcessorType = processorType, ParameterArray = parameterArray
+                                        };
                         processorData.Source = String.IsNullOrEmpty(source) ? Info.System : source;
                         data.StateProcessorDataList.Add(processorData);
                     }
                     else if (processor is PostRenderProcessor)
                     {
-                        processorData = new ProcessorData { ProcessorType = processorType, ParameterArray = parameterArray };
+                        processorData = new ProcessorData
+                                        {
+                                            ProcessorType = processorType, ParameterArray = parameterArray
+                                        };
                         processorData.Source = String.IsNullOrEmpty(source) ? Info.System : source;
                         data.PostRenderProcessorDataList.Add(processorData);
                     }
                     else if (processor is ErrorProcessor)
                     {
-                        processorData = new ErrorProcessorData { ProcessorType = processorType, ParameterArray = parameterArray };
+                        processorData = new ErrorProcessorData
+                                        {
+                                            ProcessorType = processorType, ParameterArray = parameterArray
+                                        };
                         processorData.Source = String.IsNullOrEmpty(source) ? Info.System : source;
-                        ErrorProcessorData epd = ((ErrorProcessorData)processorData);
+                        var epd = ((ErrorProcessorData)processorData);
                         epd.Init();
                         data.ErrorProcessorDataList.Add(epd);
                     }
@@ -636,7 +659,7 @@ namespace Nalarium.Web.Processing
             {
                 if (WebProcessingReportController.Reporter.Initialized)
                 {
-                    Map map = new Map();
+                    var map = new Map();
                     map.Add("Section", "Processor");
                     map.Add("Type", processorType);
                     map.Add("Message", ex.Message);
@@ -656,7 +679,7 @@ namespace Nalarium.Web.Processing
             }
             for (Int32 i = 0; i < parameterArray.Length; i++)
             {
-                String parameter = parameterArray[i] as String;
+                var parameter = parameterArray[i] as String;
                 if (parameter == null)
                 {
                     continue;
@@ -687,14 +710,14 @@ namespace Nalarium.Web.Processing
         }
 
         //- ~LoadEndpointData -//
-        internal static void LoadEndpointData(Data.WebDomainData data, EndpointCollection collection)
+        internal static void LoadEndpointData(WebDomainData data, EndpointCollection collection)
         {
             List<EndpointElement> elementList = collection.ToList();
-            List<String> matchTextList = new List<String>();
-            List<String> referenceKeyList = new List<String>();
+            var matchTextList = new List<String>();
+            var referenceKeyList = new List<String>();
             if (collection.Count(p => p.Text == "*") > 1)
             {
-                throw new System.Configuration.ConfigurationErrorsException(Nalarium.Web.Globalization.ResourceAccessor.GetString("WebDomain_DuplicateCatchAll"));
+                throw new ConfigurationErrorsException(ResourceAccessor.GetString("WebDomain_DuplicateCatchAll"));
             }
             foreach (EndpointElement element in elementList)
             {
@@ -717,47 +740,47 @@ namespace Nalarium.Web.Processing
                 if (element.Text == "*")
                 {
                     data.CatchAllEndpoint = new EndpointData
-                    {
-                        AccessRuleGroup = element.AccessRuleGroup,
-                        OriginalMatchText = originalMatchText,
-                        Text = matchText,
-                        TextWithoutSlash = withoutSlash,
-                        Selector = matchType,
-                        Type = element.Type,
-                        ParameterValue = element.Parameter,
-                        ParameterMap = element.GetParameterMap(),
-                        Source = Info.System
-                    };
+                                            {
+                                                AccessRuleGroup = element.AccessRuleGroup,
+                                                OriginalMatchText = originalMatchText,
+                                                Text = matchText,
+                                                TextWithoutSlash = withoutSlash,
+                                                Selector = matchType,
+                                                Type = element.Type,
+                                                ParameterValue = element.Parameter,
+                                                ParameterMap = element.GetParameterMap(),
+                                                Source = Info.System
+                                            };
                 }
                 else
                 {
-                    EndpointData endpointData = new EndpointData
-                    {
-                        AccessRuleGroup = element.AccessRuleGroup,
-                        OriginalMatchText = originalMatchText,
-                        Text = matchText,
-                        TextWithoutSlash = withoutSlash,
-                        Selector = matchType,
-                        Type = element.Type,
-                        RequireSlash = element.RequireSlash,
-                        ParameterValue = element.Parameter,
-                        ParameterMap = element.GetParameterMap(),
-                        Source = Info.System
-                    };
+                    var endpointData = new EndpointData
+                                       {
+                                           AccessRuleGroup = element.AccessRuleGroup,
+                                           OriginalMatchText = originalMatchText,
+                                           Text = matchText,
+                                           TextWithoutSlash = withoutSlash,
+                                           Selector = matchType,
+                                           Type = element.Type,
+                                           RequireSlash = element.RequireSlash,
+                                           ParameterValue = element.Parameter,
+                                           ParameterMap = element.GetParameterMap(),
+                                           Source = Info.System
+                                       };
                     endpointData.SubEndpointDataList = new EndpointDataList();
                     foreach (EndpointElement subElement in element.SubEndpoints)
                     {
                         String subWithoutSlash = EndpointData.GetTextWithoutSlash(matchText);
                         endpointData.SubEndpointDataList.Add(new EndpointData
-                        {
-                            Text = subElement.Text,
-                            TextWithoutSlash = subWithoutSlash,
-                            Selector = subElement.Selector,
-                            Type = subElement.Type,
-                            ParameterValue = subElement.Parameter,
-                            ParameterMap = subElement.GetParameterMap(),
-                            Source = Info.System
-                        });
+                                                             {
+                                                                 Text = subElement.Text,
+                                                                 TextWithoutSlash = subWithoutSlash,
+                                                                 Selector = subElement.Selector,
+                                                                 Type = subElement.Type,
+                                                                 ParameterValue = subElement.Parameter,
+                                                                 ParameterMap = subElement.GetParameterMap(),
+                                                                 Source = Info.System
+                                                             });
                     }
                     data.EndpointDataList.Add(endpointData);
                 }
@@ -784,21 +807,21 @@ namespace Nalarium.Web.Processing
             {
                 if (data.Any(p => p.Name == element.Name))
                 {
-                    throw new System.Configuration.ConfigurationErrorsException(String.Format(System.Globalization.CultureInfo.CurrentCulture, Resource.Sequence_DuplicateNameInConfig, element.Name));
+                    throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, Resource.Sequence_DuplicateNameInConfig, element.Name));
                 }
-                SequenceData sequenceData = new SequenceData
-                {
-                    Name = element.Name
-                };
+                var sequenceData = new SequenceData
+                                   {
+                                       Name = element.Name
+                                   };
                 sequenceData.ViewList = new ViewDataList();
                 data.Add(sequenceData);
                 foreach (ViewElement viewElement in element.Views)
                 {
-                    ViewData viewData = new ViewData
-                    {
-                        Name = viewElement.Name,
-                        ViewUsed = viewElement.ViewUsed
-                    };
+                    var viewData = new ViewData
+                                   {
+                                       Name = viewElement.Name,
+                                       ViewUsed = viewElement.ViewUsed
+                                   };
                     sequenceData.ViewList.Add(viewData);
                 }
                 sequenceData.VersionList = new VersionDataList();
@@ -806,29 +829,29 @@ namespace Nalarium.Web.Processing
                 foreach (VersionElement versionElement in element.Versions)
                 {
                     sequenceData.VersionList.Add(new VersionData
-                    {
-                        Name = versionElement.Name,
-                        Weight = versionElement.Weight
-                    });
+                                                 {
+                                                     Name = versionElement.Name,
+                                                     Weight = versionElement.Weight
+                                                 });
                 }
             }
         }
 
         //- ~GetParameterData -//
-        internal static ParameterDataList GetWebDomainParameterData(Nalarium.Web.Processing.Configuration.ParameterCollection collection)
+        internal static ParameterDataList GetWebDomainParameterData(ParameterCollection collection)
         {
-            List<Nalarium.Web.Processing.Configuration.ParameterElement> elementList = collection.ToList();
-            ParameterDataList dataList = new ParameterDataList();
-            foreach (Nalarium.Web.Processing.Configuration.ParameterElement element in elementList)
+            List<Configuration.ParameterElement> elementList = collection.ToList();
+            var dataList = new ParameterDataList();
+            foreach (Configuration.ParameterElement element in elementList)
             {
                 //+ parameter
                 String value = ProcessSingleSettingToken(element.Value);
                 dataList.Add(new ParameterData
-                {
-                    Category = element.Category,
-                    Name = element.Name,
-                    Value = value
-                });
+                             {
+                                 Category = element.Category,
+                                 Name = element.Name,
+                                 Value = value
+                             });
             }
             //+
             return dataList;
@@ -837,26 +860,26 @@ namespace Nalarium.Web.Processing
         //- ~GetParameterData -//
         internal static ParameterDataList GetComponentParameterData(ComponentParameterCollection collection)
         {
-            List<Nalarium.Configuration.ParameterElement> elementList = collection.ToList();
-            ParameterDataList dataList = new ParameterDataList();
-            foreach (Nalarium.Configuration.ParameterElement element in elementList)
+            List<ParameterElement> elementList = collection.ToList();
+            var dataList = new ParameterDataList();
+            foreach (ParameterElement element in elementList)
             {
                 //+ parameter
                 String value = ProcessSingleSettingToken(element.Value);
                 dataList.Add(new ParameterData
-                {
-                    Name = element.Name,
-                    Value = value
-                });
+                             {
+                                 Name = element.Name,
+                                 Value = value
+                             });
             }
             //+
             return dataList;
         }
 
         //- ~CopyWebDomain -//
-        internal static Data.WebDomainData CopyWebDomain(String webDomainName, List<Data.WebDomainData> dataList)
+        internal static WebDomainData CopyWebDomain(String webDomainName, List<WebDomainData> dataList)
         {
-            Data.WebDomainData data = dataList.SingleOrDefault(p => p.Name.Equals(webDomainName, StringComparison.InvariantCultureIgnoreCase));
+            WebDomainData data = dataList.SingleOrDefault(p => p.Name.Equals(webDomainName, StringComparison.InvariantCultureIgnoreCase));
             if (data == null)
             {
                 return null;
@@ -919,5 +942,15 @@ namespace Nalarium.Web.Processing
             //+
             return element;
         }
+
+        #region Nested type: Info
+
+        internal class Info
+        {
+            public const String System = "System";
+            public const String Root = "root";
+        }
+
+        #endregion
     }
 }

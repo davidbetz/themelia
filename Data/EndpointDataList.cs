@@ -1,10 +1,13 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Collections.Generic;
-//+
+
 namespace Nalarium.Web.Processing.Data
 {
     public class EndpointDataList : List<EndpointData>
@@ -13,6 +16,7 @@ namespace Nalarium.Web.Processing.Data
         public EndpointDataList()
         {
         }
+
         public EndpointDataList(IEnumerable<EndpointData> collection)
             : base(collection)
         {
@@ -25,7 +29,7 @@ namespace Nalarium.Web.Processing.Data
         //- ~Clone -//
         internal EndpointDataList Clone()
         {
-            EndpointDataList list = new EndpointDataList();
+            var list = new EndpointDataList();
             foreach (EndpointData data in this)
             {
                 list.Add(data.Clone());

@@ -1,9 +1,13 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Globalization;
+
 namespace Nalarium.Web.Processing
 {
     internal static class ResetFlagReader
@@ -15,8 +19,8 @@ namespace Nalarium.Web.Processing
             {
                 return ResetFlags.None;
             }
-            ResetFlags flags = new ResetFlags();
-            String[] partArray = data.ToLower(System.Globalization.CultureInfo.CurrentCulture).Split(',');
+            var flags = new ResetFlags();
+            String[] partArray = data.ToLower(CultureInfo.CurrentCulture).Split(',');
             foreach (String part in partArray)
             {
                 switch (part)

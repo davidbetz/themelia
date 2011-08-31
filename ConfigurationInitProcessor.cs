@@ -1,14 +1,19 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
-//+
 using Nalarium.Web.Processing.Configuration;
 using Nalarium.Web.Processing.Data;
 //+
+
 namespace Nalarium.Web.Processing
 {
     internal class ConfigurationInitProcessor : SystemInitProcessor
@@ -17,11 +22,6 @@ namespace Nalarium.Web.Processing
 
         //+
         //- @Info -//
-        public static class Info
-        {
-            public const String ActiveData = "ActiveData";
-            public const String Root = "root";
-        }
 
         //+
         //- @OnPreHttpHandlerExecute -//
@@ -61,19 +61,19 @@ namespace Nalarium.Web.Processing
                         if (WebDomainDataList.AllWebDomainData == null)
                         {
                             WebDomainCollection webDomainCollection = cs.WebDomain;
-                            WebDomainDataList webDomainDataList = new WebDomainDataList();
+                            var webDomainDataList = new WebDomainDataList();
                             //+ dupe?
                             var duplicate = webDomainCollection.GroupBy(p => p.Name).Select(p => new
-                            {
-                                Name = p.Key,
-                                Count = p.Count()
-                            }).FirstOrDefault(p => p.Count > 1);
+                                                                                                 {
+                                                                                                     Name = p.Key,
+                                                                                                     Count = p.Count()
+                                                                                                 }).FirstOrDefault(p => p.Count > 1);
                             if (duplicate != null)
                             {
                                 throw new InvalidOperationException(String.Format(Resource.WebDomain_DuplicateName, duplicate.Name));
                             }
                             //+ abstract
-                            System.Collections.Generic.IEnumerable<WebDomainElement> abstractWebDomainElementEnumerable = webDomainCollection.Where(p => p.IsAbstract);
+                            IEnumerable<WebDomainElement> abstractWebDomainElementEnumerable = webDomainCollection.Where(p => p.IsAbstract);
                             foreach (WebDomainElement element in abstractWebDomainElementEnumerable)
                             {
                                 element.ValidateAbstract();
@@ -90,40 +90,40 @@ namespace Nalarium.Web.Processing
                                 }
                                 else
                                 {
-                                    webDomainName = webDomainName.ToLower(System.Globalization.CultureInfo.CurrentCulture);
+                                    webDomainName = webDomainName.ToLower(CultureInfo.CurrentCulture);
                                 }
                                 ConfigurationLoader.InitWebDomain(webDomainName, rootWebDomainElement, webDomainDataList);
                             }
                             else
                             {
                                 ConfigurationLoader.InitWebDomain(Info.Root, new WebDomainElement
-                                {
-                                    Name = Info.Root,
-                                    Path = String.Empty
-                                }, webDomainDataList);
+                                                                             {
+                                                                                 Name = Info.Root,
+                                                                                 Path = String.Empty
+                                                                             }, webDomainDataList);
                             }
                             if (cs.EnableConfigViewer)
                             {
                                 webDomainDataList[Info.Root].EndpointDataList.Add(new EndpointData
-                                {
-                                    Type = "ConfigViewer",
-                                    Text = "/__viewconfig",
-                                    Selector = SelectorType.PathStartsWith
-                                });
+                                                                                  {
+                                                                                      Type = "ConfigViewer",
+                                                                                      Text = "/__viewconfig",
+                                                                                      Selector = SelectorType.PathStartsWith
+                                                                                  });
                             }
                             if (cs.EnableConfigEditor)
                             {
                                 webDomainDataList[Info.Root].EndpointDataList.Add(new EndpointData
-                                {
-                                    Type = "ConfigEditor",
-                                    Text = "/__editconfig",
-                                    Selector = SelectorType.PathStartsWith
-                                });
+                                                                                  {
+                                                                                      Type = "ConfigEditor",
+                                                                                      Text = "/__editconfig",
+                                                                                      Selector = SelectorType.PathStartsWith
+                                                                                  });
                             }
                             //+ other
-                            System.Collections.Generic.IEnumerable<WebDomainElement> concreteWebDomainElementEnumerable = webDomainCollection.Where(p => !p.IsAbstract);
+                            IEnumerable<WebDomainElement> concreteWebDomainElementEnumerable = webDomainCollection.Where(p => !p.IsAbstract);
 #if DEBUG
-                            System.Collections.Generic.List<WebDomainElement> list = concreteWebDomainElementEnumerable.ToList();
+                            List<WebDomainElement> list = concreteWebDomainElementEnumerable.ToList();
 #endif
                             foreach (WebDomainElement element in concreteWebDomainElementEnumerable)
                             {
@@ -134,7 +134,7 @@ namespace Nalarium.Web.Processing
                                 }
                                 else
                                 {
-                                    webDomainName = webDomainName.ToLower(System.Globalization.CultureInfo.CurrentCulture);
+                                    webDomainName = webDomainName.ToLower(CultureInfo.CurrentCulture);
                                 }
                                 if (webDomainName != Info.Root)
                                 {
@@ -158,5 +158,15 @@ namespace Nalarium.Web.Processing
             //+
             return null;
         }
+
+        #region Nested type: Info
+
+        public static class Info
+        {
+            public const String ActiveData = "ActiveData";
+            public const String Root = "root";
+        }
+
+        #endregion
     }
 }

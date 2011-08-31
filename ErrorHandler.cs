@@ -1,12 +1,16 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Web;
-//+
+using Nalarium.Reporting;
 using Nalarium.Web.Processing.Data;
 //+
+
 namespace Nalarium.Web.Processing
 {
     internal static class ErrorHandler
@@ -14,7 +18,7 @@ namespace Nalarium.Web.Processing
         //- ~OnHandleError -//
         internal static void OnHandleError(Object sender, EventArgs ea)
         {
-            HttpApplication ha = sender as HttpApplication;
+            var ha = sender as HttpApplication;
             if (ha == null)
             {
                 return;
@@ -38,14 +42,14 @@ namespace Nalarium.Web.Processing
             {
                 if (WebProcessingReportController.Reporter.Initialized)
                 {
-                    Map map = new Map();
+                    var map = new Map();
                     map.Add("Section", "ErrorProcessor");
                     map.Add("Message", "An uncaught exception was thrown, but WebDomain.CurrentData was null.  However, the original error message has been preserved and is packaged in this report.");
                     map.Add("Url", Http.AbsoluteUrlOriginalCase);
-                    Nalarium.Reporting.ExceptionReportCreator creator = new Nalarium.Reporting.ExceptionReportCreator
-                    {
-                        Formatter = WebProcessingReportController.Reporter.Formatter
-                    };
+                    var creator = new ExceptionReportCreator
+                                  {
+                                      Formatter = WebProcessingReportController.Reporter.Formatter
+                                  };
                     map.Add("Exception Report", creator.Create(exception));
                     //+
                     WebProcessingReportController.Reporter.AddMap(map);

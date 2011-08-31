@@ -1,11 +1,15 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Collections.Generic;
 using Nalarium.Reflection;
 //+
+
 namespace Nalarium.Web.Processing
 {
     /// <summary>
@@ -13,18 +17,18 @@ namespace Nalarium.Web.Processing
     /// </summary>
     public abstract class VerbalInitProcessor : InitProcessor
     {
-        internal static new Type _Type = typeof(VerbalInitProcessor);
+        internal new static Type _Type = typeof(VerbalInitProcessor);
 
         //+
         //- @Execute -//
         public override sealed InitProcessor Execute()
         {
-            System.Collections.Generic.List<MethodAttributeInformation<RunForVerbsAttribute>> methodAttributeInformationArray = AttributeReader.FindMethodsWithAttribute<RunForVerbsAttribute>(this);
+            List<MethodAttributeInformation<RunForVerbsAttribute>> methodAttributeInformationArray = AttributeReader.FindMethodsWithAttribute<RunForVerbsAttribute>(this);
             if (methodAttributeInformationArray == null)
             {
                 return null;
             }
-            foreach (MethodAttributeInformation<RunForVerbsAttribute> mai in methodAttributeInformationArray)
+            foreach (var mai in methodAttributeInformationArray)
             {
                 HttpVerbs httpVerbs = mai.Attribute.HttpVerbs;
                 if ((Http.Method == HttpVerbs.Get && (httpVerbs & HttpVerbs.Get) == HttpVerbs.Get) ||
@@ -34,8 +38,8 @@ namespace Nalarium.Web.Processing
                     (Http.Method == HttpVerbs.Post && (httpVerbs & HttpVerbs.Put) == HttpVerbs.Put))
                 {
                     Object result = mai.MethodInfo.Invoke(this, null);
-                    InitProcessor resultInitProcessor = result as InitProcessor;
-                    if(resultInitProcessor == null)
+                    var resultInitProcessor = result as InitProcessor;
+                    if (resultInitProcessor == null)
                     {
                         return resultInitProcessor;
                     }

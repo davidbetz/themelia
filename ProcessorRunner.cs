@@ -1,14 +1,17 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Linq;
 using System.Threading;
 using System.Web;
-//+
 using Nalarium.Web.Processing.Data;
 //+
+
 namespace Nalarium.Web.Processing
 {
     internal static class ProcessorRunner
@@ -79,15 +82,14 @@ namespace Nalarium.Web.Processing
                             {
                                 processor.IsChained = true;
                             }
-                        }
-                        while (processor != null);
+                        } while (processor != null);
                     }
                 }
                 catch (Exception ex)
                 {
                     if (WebProcessingReportController.Reporter.Initialized)
                     {
-                        Map map = new Map();
+                        var map = new Map();
                         map.Add("Section", "InitProcessor");
                         map.Add("Type", processorType);
                         map.Add("Message", ex.Message);
@@ -165,7 +167,7 @@ namespace Nalarium.Web.Processing
                 {
                     if (WebProcessingReportController.Reporter.Initialized)
                     {
-                        Map map = new Map();
+                        var map = new Map();
                         map.Add("Section", "SelectionProcessor");
                         map.Add("Type", processorType);
                         map.Add("Message", ex.Message);
@@ -251,7 +253,7 @@ namespace Nalarium.Web.Processing
                 {
                     if (WebProcessingReportController.Reporter.Initialized)
                     {
-                        Map map = new Map();
+                        var map = new Map();
                         map.Add("Section", "OverrideProcessor");
                         map.Add("Type", processorType);
                         map.Add("Message", ex.Message);
@@ -340,8 +342,7 @@ namespace Nalarium.Web.Processing
                                     {
                                         processor.IsChained = true;
                                     }
-                                }
-                                while (processor != null);
+                                } while (processor != null);
                             }
                         }
                         finally
@@ -354,7 +355,7 @@ namespace Nalarium.Web.Processing
                 {
                     if (WebProcessingReportController.Reporter.Initialized)
                     {
-                        Map map = new Map();
+                        var map = new Map();
                         map.Add("Section", "StateProcessor");
                         map.Add("Type", processorType);
                         map.Add("Message", ex.Message);
@@ -378,7 +379,7 @@ namespace Nalarium.Web.Processing
                 {
                     if (HttpRuntime.UsingIntegratedPipeline)
                     {
-                        ServiceEndpointInitProcessor se = new ServiceEndpointInitProcessor();
+                        var se = new ServiceEndpointInitProcessor();
                         se.Initialize(HttpContext.Current, null);
                         se.Execute();
                     }
@@ -392,7 +393,7 @@ namespace Nalarium.Web.Processing
             {
                 if (WebProcessingReportController.Reporter.Initialized)
                 {
-                    Map map = new Map();
+                    var map = new Map();
                     map.Add("Section", "Service Endpoint");
                     map.Add("Message", ex.Message);
                     map.Add("Exception Type", ex.GetType().FullName);
@@ -409,7 +410,7 @@ namespace Nalarium.Web.Processing
             {
                 if (endpointDataList.Any(p => p.Type.Equals("file", StringComparison.OrdinalIgnoreCase)))
                 {
-                    FileAliasInitProcessor se = new FileAliasInitProcessor();
+                    var se = new FileAliasInitProcessor();
                     se.Initialize(HttpContext.Current, null);
                     se.Execute();
                 }
@@ -418,7 +419,7 @@ namespace Nalarium.Web.Processing
             {
                 if (WebProcessingReportController.Reporter.Initialized)
                 {
-                    Map map = new Map();
+                    var map = new Map();
                     map.Add("Section", "File");
                     map.Add("Message", ex.Message);
                     map.Add("Exception Type", ex.GetType().FullName);
@@ -472,7 +473,7 @@ namespace Nalarium.Web.Processing
                 {
                     ErrorProcessor processor = null;
                     //+
-                    ProcessorRunner.ProcessorReaderWriterLockSlim.EnterUpgradeableReadLock();
+                    ProcessorReaderWriterLockSlim.EnterUpgradeableReadLock();
                     if (!RouteCache.ProcessorCache.ContainsKey(processorType))
                     {
                         ProcessorReaderWriterLockSlim.EnterWriteLock();
@@ -487,7 +488,7 @@ namespace Nalarium.Web.Processing
                         }
                         finally
                         {
-                            ProcessorRunner.ProcessorReaderWriterLockSlim.ExitWriteLock();
+                            ProcessorReaderWriterLockSlim.ExitWriteLock();
                         }
                     }
                     //+
@@ -503,7 +504,7 @@ namespace Nalarium.Web.Processing
                 {
                     if (WebProcessingReportController.Reporter.Initialized)
                     {
-                        Map map = new Map();
+                        var map = new Map();
                         map.Add("Section", "ErrorProcessor");
                         map.Add("Type", processorType);
                         map.Add("Message", ex.Message);
@@ -514,7 +515,7 @@ namespace Nalarium.Web.Processing
                 }
                 finally
                 {
-                    ProcessorRunner.ProcessorReaderWriterLockSlim.ExitUpgradeableReadLock();
+                    ProcessorReaderWriterLockSlim.ExitUpgradeableReadLock();
                 }
             }
             //+
@@ -589,8 +590,7 @@ namespace Nalarium.Web.Processing
                                     {
                                         processor.IsChained = true;
                                     }
-                                }
-                                while (processor != null);
+                                } while (processor != null);
                             }
                         }
                         finally
@@ -603,7 +603,7 @@ namespace Nalarium.Web.Processing
                 {
                     if (WebProcessingReportController.Reporter.Initialized)
                     {
-                        Map map = new Map();
+                        var map = new Map();
                         map.Add("Section", "PostRenderProcessor");
                         map.Add("Type", processorType);
                         map.Add("Message", ex.Message);

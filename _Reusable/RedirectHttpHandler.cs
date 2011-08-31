@@ -1,14 +1,21 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using Nalarium.Web.Globalization;
+
 namespace Nalarium.Web.Processing
 {
     public class RedirectHttpHandler : ReusableSessionHttpHandler, IHasParameterMap
     {
         //- @ParameterMap -//
+
+        #region IHasParameterMap Members
+
         /// <summary>
         /// Gets or sets the parameter map.
         /// </summary>
@@ -16,7 +23,18 @@ namespace Nalarium.Web.Processing
         public Map ParameterMap { get; set; }
 
         //- @DefaultParameter -//
-        public String DefaultParameter { get { return "destination"; } set { } }
+        public String DefaultParameter
+        {
+            get
+            {
+                return "destination";
+            }
+            set
+            {
+            }
+        }
+
+        #endregion
 
         //+
         //- @ProcessRequest -//
@@ -29,7 +47,7 @@ namespace Nalarium.Web.Processing
             }
             if (String.IsNullOrEmpty(destination))
             {
-                HttpExceptionThrower.Throw404(Nalarium.Web.Globalization.ResourceAccessor.GetString("Redirect_NotFound"));
+                HttpExceptionThrower.Throw404(ResourceAccessor.GetString("Redirect_NotFound"));
             }
             //+
             Http.Redirect(destination);

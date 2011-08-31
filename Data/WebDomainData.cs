@@ -1,13 +1,17 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
+using System.Diagnostics;
 using System.Linq;
-//+
+
 namespace Nalarium.Web.Processing.Data
 {
-    [System.Diagnostics.DebuggerDisplay("{Name}, {Path}, {AcceptMissingTrailingSlash}, BasedOn: {BasedOn}, IsBasedOn: {IsBasedOn}")]
+    [DebuggerDisplay("{Name}, {Path}, {AcceptMissingTrailingSlash}, BasedOn: {BasedOn}, IsBasedOn: {IsBasedOn}")]
     public class WebDomainData
     {
         //- @Name -//
@@ -130,34 +134,34 @@ namespace Nalarium.Web.Processing.Data
         //- @Clone -//
         public WebDomainData Clone()
         {
-            WebDomainData data = new WebDomainData();
+            var data = new WebDomainData();
             //data.Default = this.Default;
-            data.DefaultType = this.DefaultType;
-            data.ParameterDataList = this.ParameterDataList;
-            data.DefaultParameter = this.DefaultParameter;
-            data.AcceptMissingTrailingSlash = this.AcceptMissingTrailingSlash;
-            data.Subdomain = this.Subdomain;
-            data.IsSealed = this.IsSealed;
-            data.CatchAllMode = this.CatchAllMode;
-            data.CatchAllInitParameter = this.CatchAllInitParameter;
-            data.InitProcessorDataList = this.InitProcessorDataList.Clone();
-            data.PostRenderProcessorDataList = this.PostRenderProcessorDataList.Clone();
-            data.SecurityData = this.SecurityData.Clone();
-            data.ComponentDataList = this.ComponentDataList.Clone();
-            data.CatchAllEndpoint = this.CatchAllEndpoint.Clone();
-            data.EndpointDataList = this.EndpointDataList.Clone();
-            data.HandlerFactoryDataList = this.HandlerFactoryDataList.Clone();
-            data.SelectionProcessorDataList = this.SelectionProcessorDataList.Clone();
-            data.OverrideProcessorDataList = this.OverrideProcessorDataList.Clone();
-            data.StateProcessorDataList = this.StateProcessorDataList.Clone();
+            data.DefaultType = DefaultType;
+            data.ParameterDataList = ParameterDataList;
+            data.DefaultParameter = DefaultParameter;
+            data.AcceptMissingTrailingSlash = AcceptMissingTrailingSlash;
+            data.Subdomain = Subdomain;
+            data.IsSealed = IsSealed;
+            data.CatchAllMode = CatchAllMode;
+            data.CatchAllInitParameter = CatchAllInitParameter;
+            data.InitProcessorDataList = InitProcessorDataList.Clone();
+            data.PostRenderProcessorDataList = PostRenderProcessorDataList.Clone();
+            data.SecurityData = SecurityData.Clone();
+            data.ComponentDataList = ComponentDataList.Clone();
+            data.CatchAllEndpoint = CatchAllEndpoint.Clone();
+            data.EndpointDataList = EndpointDataList.Clone();
+            data.HandlerFactoryDataList = HandlerFactoryDataList.Clone();
+            data.SelectionProcessorDataList = SelectionProcessorDataList.Clone();
+            data.OverrideProcessorDataList = OverrideProcessorDataList.Clone();
+            data.StateProcessorDataList = StateProcessorDataList.Clone();
             //data.AccessRuleDataList = this.AccessRuleDataList.Clone();
-            data.ProcessorFactoryDataList = this.ProcessorFactoryDataList.Clone();
+            data.ProcessorFactoryDataList = ProcessorFactoryDataList.Clone();
             //+
             return data;
         }
 
         //- $SortPriority -//
-        private static Int32 SortPriority(Nalarium.IHasPriority p1, Nalarium.IHasPriority p2)
+        private static Int32 SortPriority(IHasPriority p1, IHasPriority p2)
         {
             if (p2.Priority > p1.Priority)
             {
@@ -174,33 +178,33 @@ namespace Nalarium.Web.Processing.Data
         //- @SortAllDynamic -//
         public void SortAllDynamic()
         {
-            if (this.InitProcessorDataList.Count != this.InitProcessorDataList.OriginalCount)
+            if (InitProcessorDataList.Count != InitProcessorDataList.OriginalCount)
             {
-                this.InitProcessorDataList = new InitProcessorDataList(this.InitProcessorDataList.OrderBy(p => p.Priority).ToList());
+                InitProcessorDataList = new InitProcessorDataList(InitProcessorDataList.OrderBy(p => p.Priority).ToList());
             }
-            if (this.ProcessorFactoryDataList.Count != this.ProcessorFactoryDataList.OriginalCount)
+            if (ProcessorFactoryDataList.Count != ProcessorFactoryDataList.OriginalCount)
             {
-                this.ProcessorFactoryDataList = new ProcessorFactoryDataList(this.ProcessorFactoryDataList.OrderBy(p => p.Priority).ToList());
+                ProcessorFactoryDataList = new ProcessorFactoryDataList(ProcessorFactoryDataList.OrderBy(p => p.Priority).ToList());
             }
-            if (this.HandlerFactoryDataList.Count != this.HandlerFactoryDataList.OriginalCount)
+            if (HandlerFactoryDataList.Count != HandlerFactoryDataList.OriginalCount)
             {
-                this.HandlerFactoryDataList = new EndpointFactoryDataList(this.HandlerFactoryDataList.OrderBy(p => p.Priority).ToList());
+                HandlerFactoryDataList = new EndpointFactoryDataList(HandlerFactoryDataList.OrderBy(p => p.Priority).ToList());
             }
-            if (this.SelectionProcessorDataList.Count != this.SelectionProcessorDataList.OriginalCount)
+            if (SelectionProcessorDataList.Count != SelectionProcessorDataList.OriginalCount)
             {
-                this.SelectionProcessorDataList = new SelectionProcessorDataList(this.SelectionProcessorDataList.OrderBy(p => p.Priority).ToList());
+                SelectionProcessorDataList = new SelectionProcessorDataList(SelectionProcessorDataList.OrderBy(p => p.Priority).ToList());
             }
-            if (this.OverrideProcessorDataList.Count != this.OverrideProcessorDataList.OriginalCount)
+            if (OverrideProcessorDataList.Count != OverrideProcessorDataList.OriginalCount)
             {
-                this.OverrideProcessorDataList = new OverrideProcessorDataList(this.OverrideProcessorDataList.OrderBy(p => p.Priority).ToList());
+                OverrideProcessorDataList = new OverrideProcessorDataList(OverrideProcessorDataList.OrderBy(p => p.Priority).ToList());
             }
-            if (this.StateProcessorDataList.Count != this.StateProcessorDataList.OriginalCount)
+            if (StateProcessorDataList.Count != StateProcessorDataList.OriginalCount)
             {
-                this.StateProcessorDataList = new StateProcessorDataList(this.StateProcessorDataList.OrderBy(p => p.Priority).ToList());
+                StateProcessorDataList = new StateProcessorDataList(StateProcessorDataList.OrderBy(p => p.Priority).ToList());
             }
-            if (this.PostRenderProcessorDataList.Count != this.PostRenderProcessorDataList.OriginalCount)
+            if (PostRenderProcessorDataList.Count != PostRenderProcessorDataList.OriginalCount)
             {
-                this.PostRenderProcessorDataList = new PostRenderProcessorDataList(this.PostRenderProcessorDataList.OrderBy(p => p.Priority).ToList());
+                PostRenderProcessorDataList = new PostRenderProcessorDataList(PostRenderProcessorDataList.OrderBy(p => p.Priority).ToList());
             }
         }
     }

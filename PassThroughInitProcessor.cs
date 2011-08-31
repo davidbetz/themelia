@@ -1,9 +1,13 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Globalization;
+
 namespace Nalarium.Web.Processing
 {
     public class PassThroughInitProcessor : InitProcessor
@@ -16,7 +20,7 @@ namespace Nalarium.Web.Processing
                 Boolean forcePassThrough = false;
                 foreach (Object item in ParameterArray)
                 {
-                    String value = item as String;
+                    var value = item as String;
                     if (!String.IsNullOrEmpty(value))
                     {
                         String[] partArray = value.Split(',');
@@ -32,7 +36,7 @@ namespace Nalarium.Web.Processing
                             {
                                 if (WebProcessingReportController.Reporter.Initialized)
                                 {
-                                    Map map = new Map();
+                                    var map = new Map();
                                     map.Add("Section", "PassThrough");
                                     map.Add("Message", "Invalid selector type");
                                     map.Add("Selector Type", partArray[0].Trim());
@@ -41,11 +45,11 @@ namespace Nalarium.Web.Processing
                                 }
                                 continue;
                             }
-                            criteria = partArray[1].Trim().ToLower(System.Globalization.CultureInfo.CurrentCulture);
+                            criteria = partArray[1].Trim().ToLower(CultureInfo.CurrentCulture);
                         }
                         else if (partArray.Length == 1)
                         {
-                            criteria = partArray[0].Trim().ToLower(System.Globalization.CultureInfo.CurrentCulture);
+                            criteria = partArray[0].Trim().ToLower(CultureInfo.CurrentCulture);
                         }
                         else
                         {

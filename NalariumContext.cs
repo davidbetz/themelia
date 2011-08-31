@@ -1,21 +1,18 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using Nalarium.Web.Processing.Data;
-//+
+
 namespace Nalarium.Web.Processing
 {
     public class NalariumContext
     {
         //- ~Info -//
-        internal static class Info
-        {
-            public const String Scope = "__$Nalarium$Processing$Context";
-            //+
-            public const String Current = "Current";
-        }
 
         //+
         //- @Current -//
@@ -27,7 +24,7 @@ namespace Nalarium.Web.Processing
             }
             internal set
             {
-                HttpData.SetScopedItem<NalariumContext>(Info.Scope, Info.Current, value);
+                HttpData.SetScopedItem(Info.Scope, Info.Current, value);
             }
         }
 
@@ -48,9 +45,20 @@ namespace Nalarium.Web.Processing
         public static WebDomain GetWebDomain(String name)
         {
             return new WebDomain
-            {
-                Configuration = WebDomainDataList.AllWebDomainData[name]
-            };
+                   {
+                       Configuration = WebDomainDataList.AllWebDomainData[name]
+                   };
         }
+
+        #region Nested type: Info
+
+        internal static class Info
+        {
+            public const String Scope = "__$Nalarium$Processing$Context";
+            //+
+            public const String Current = "Current";
+        }
+
+        #endregion
     }
 }

@@ -1,13 +1,16 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//+
 using Nalarium.Web.Processing.Data;
 //+
+
 namespace Nalarium.Web.Processing
 {
     internal class ServiceEndpointInitProcessor : InitProcessor
@@ -59,8 +62,8 @@ namespace Nalarium.Web.Processing
                 {
                     throw new InvalidOperationException(Resource.Path_PrefixForbidden);
                 }
-                HttpData.SetScopedItem<Boolean>(Http.Info.Alias, Http.Info.IsAliased, true);
-                Context.RewritePath("~/" + target, extraData, Http.QueryString.ToString(), false);
+                HttpData.SetScopedItem(Http.Info.Alias, Http.Info.IsAliased, true);
+                Context.RewritePath("~/" + target, extraData, Http.QueryString, false);
                 //+
                 FlowControl.StopAfterInitProcessing();
             }

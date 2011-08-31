@@ -1,17 +1,26 @@
 #region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Web.UI;
+
 namespace Nalarium.Web.Processing.Sequence
 {
     /// <summary>
     /// Base class to create a sequence view.
     /// </summary>
-    public class View : System.Web.UI.UserControl
+    public class View : UserControl
     {
         private Boolean _isDataBound;
+
+        public View()
+        {
+            _isDataBound = false;
+        }
 
         //+
         ////- ~Presenter -//
@@ -45,10 +54,6 @@ namespace Nalarium.Web.Processing.Sequence
 
         //+
         //- @SequenceView -//
-        public View()
-        {
-            _isDataBound = false;
-        }
 
         //+
         //- #SaveControlState -//
@@ -66,7 +71,7 @@ namespace Nalarium.Web.Processing.Sequence
         //- #OnInit -//
         protected override void OnInit(EventArgs e)
         {
-            this.Load += new EventHandler(OnViewLoad);
+            Load += OnViewLoad;
             //+
             base.OnInit(e);
         }
@@ -77,7 +82,7 @@ namespace Nalarium.Web.Processing.Sequence
             if (!_isDataBound && AutoDataBind)
             {
                 _isDataBound = true;
-                this.DataBind();
+                DataBind();
             }
         }
 

@@ -1,16 +1,21 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Configuration;
-//+
+using System.Diagnostics;
+using Nalarium.Configuration;
 using Nalarium.Web.Security;
 //+
+
 namespace Nalarium.Web.Processing.Configuration
 {
-    [System.Diagnostics.DebuggerDisplay("{DefaultAccessMode}, {ValidatorType}")]
-    public class SecurityElement : Nalarium.Configuration.CommentableElement
+    [DebuggerDisplay("{DefaultAccessMode}, {ValidatorType}")]
+    public class SecurityElement : CommentableElement
     {
         //- @DefaultAccessMode -//
         [ConfigurationProperty("defaultAccessMode", IsRequired = true)]

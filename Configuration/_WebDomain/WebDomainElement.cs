@@ -1,24 +1,28 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Configuration;
-//+
+using System.Diagnostics;
 using Nalarium.Configuration;
 //+
+
 namespace Nalarium.Web.Processing.Configuration
 {
-    [System.Diagnostics.DebuggerDisplay("{Name}, Path: {Path}, Subdomain: {Subdomain}, EnableMissingSlash: {EnableMissingSlash}, BasedOn: {BasedOn}")]
-    public class WebDomainElement : Nalarium.Configuration.CommentableElement
+    [DebuggerDisplay("{Name}, Path: {Path}, Subdomain: {Subdomain}, EnableMissingSlash: {EnableMissingSlash}, BasedOn: {BasedOn}")]
+    public class WebDomainElement : CommentableElement
     {
         //- @CatchAllMode -//
         [ConfigurationProperty("catchAllMode", DefaultValue = "Custom")]
-        public Nalarium.Web.Processing.CatchAllMode CatchAllMode
+        public CatchAllMode CatchAllMode
         {
             get
             {
-                return (Nalarium.Web.Processing.CatchAllMode)this["catchAllMode"];
+                return (CatchAllMode)this["catchAllMode"];
             }
         }
 
@@ -125,20 +129,6 @@ namespace Nalarium.Web.Processing.Configuration
         }
 
         //- ~ValidateAbstract -//
-        internal void ValidateAbstract( )
-        {
-            if (IsAbstract)
-            {
-                if (!String.IsNullOrEmpty(Path) || !String.IsNullOrEmpty(Subdomain))
-                {
-                    throw new InvalidOperationException(String.Format(Resource.WebDomain_InvalidAbstractWebDomain, Name));
-                }
-                if (IsSealed)
-                {
-                    throw new InvalidOperationException(String.Format(Resource.WebDomain_AbstractWebDomainMayNotBeSealed, Name));
-                }
-            }
-        }
 
         //- @IsAbstract -//
         public Boolean IsAbstract
@@ -232,6 +222,21 @@ namespace Nalarium.Web.Processing.Configuration
             get
             {
                 return (SecurityElement)this["security"];
+            }
+        }
+
+        internal void ValidateAbstract()
+        {
+            if (IsAbstract)
+            {
+                if (!String.IsNullOrEmpty(Path) || !String.IsNullOrEmpty(Subdomain))
+                {
+                    throw new InvalidOperationException(String.Format(Resource.WebDomain_InvalidAbstractWebDomain, Name));
+                }
+                if (IsSealed)
+                {
+                    throw new InvalidOperationException(String.Format(Resource.WebDomain_AbstractWebDomainMayNotBeSealed, Name));
+                }
             }
         }
     }

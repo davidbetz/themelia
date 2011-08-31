@@ -1,10 +1,13 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Collections.Generic;
-//+
+
 namespace Nalarium.Web.Processing.Data
 {
     public class PostRenderProcessorDataList : List<ProcessorData>
@@ -13,6 +16,7 @@ namespace Nalarium.Web.Processing.Data
         public PostRenderProcessorDataList()
         {
         }
+
         public PostRenderProcessorDataList(IEnumerable<ProcessorData> collection)
             : base(collection)
         {
@@ -25,16 +29,16 @@ namespace Nalarium.Web.Processing.Data
         //- ~Clone -//
         internal PostRenderProcessorDataList Clone()
         {
-            PostRenderProcessorDataList list = new PostRenderProcessorDataList();
+            var list = new PostRenderProcessorDataList();
             foreach (ProcessorData data in this)
             {
                 list.Add(new ProcessorData
-                {
-                    Priority = data.Priority,
-                    ParameterArray = data.ParameterArray,
-                    ProcessorType = data.ProcessorType,
-                    Source = data.Source
-                });
+                         {
+                             Priority = data.Priority,
+                             ParameterArray = data.ParameterArray,
+                             ProcessorType = data.ProcessorType,
+                             Source = data.Source
+                         });
             }
             //+
             return list;

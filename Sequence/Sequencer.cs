@@ -1,47 +1,58 @@
 #region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Web.UI;
+using Nalarium.Web.Processing.Configuration;
 using Nalarium.Web.Processing.Data;
 //+
+
 namespace Nalarium.Web.Processing.Sequence
 {
     /// <summary>
     /// Holds all sequence views and versions.
     /// </summary>
-    [System.Web.UI.ParseChildren(false)]
-    [System.Web.UI.ControlBuilder(typeof(ViewVersionControlBuilder))]
-    public class Sequencer : System.Web.UI.Control
+    [ParseChildren(false)]
+    [ControlBuilder(typeof(ViewVersionControlBuilder))]
+    public class Sequencer : Control
     {
         //- @Info -//
-        public static class Info
-        {
-            public const String Scope = "__$Nalarium$Sequence";
-            //+
-            public const String ActiveVersion = "ActiveVersion";
-            public const String PageTitle = "PageTitle";
-            //+
-            public const String PublicScope = "sequence";
-            //+
-            //public const String FirstMessage = PublicScope + "::first";
-            //public const String LastMessage = PublicScope + "::last";
-            //public const String NextMessage = PublicScope + "::next";
-            //public const String PreviousMessage = PublicScope + "::previous";
-            //public const String JumpMessage = PublicScope + "::jump";
-        }
 
         //+
-        private static Object _lock = new Object();
-        private static Map<String, SequenceType> ValidatedSequenceMap = new Map<String, SequenceType>();
+        private static readonly Object _lock = new Object();
+        private static readonly Map<String, SequenceType> ValidatedSequenceMap = new Map<String, SequenceType>();
 
         //+ field
         //protected ViewData _activeViewData;
         protected String _activeVersionName;
         protected String _activeViewName;
-        protected String _sequenceName;
         protected Boolean _ensureViewConsistency = true;
+        protected String _sequenceName;
+
+        public Sequencer()
+        {
+            //ViewDataList = new System.Collections.Generic.List<ViewData>();
+            VersionDataList = new List<VersionData>();
+            //+
+            _activeViewName = StateTracker.Get(StateEntryType.Value, "__$Sequence$ViewDataName");
+            ActiveVersionName = StateTracker.Get(StateEntryType.Value, "__$Sequence$VersionDataName");
+            //+
+            //if (!String.IsNullOrEmpty(_activeViewName))
+            //{
+            //    _activeViewData = new ViewData
+            //    {
+            //        Name = _activeViewName
+            //    };
+            //}
+        }
+
         //private Map<String, System.Web.UI.Control> _actionMap = new Map<string, System.Web.UI.Control>();
         //private Map<String, System.Web.UI.Control> _dataMap = new Map<string, System.Web.UI.Control>();
 
@@ -94,7 +105,7 @@ namespace Nalarium.Web.Processing.Sequence
         /// <summary>
         /// View of registered view version
         /// </summary>
-        public System.Collections.Generic.List<VersionData> VersionDataList { get; set; }
+        public List<VersionData> VersionDataList { get; set; }
 
         //- ~CurrentView -//
         internal View CurrentView { get; set; }
@@ -159,22 +170,6 @@ namespace Nalarium.Web.Processing.Sequence
 
         //+
         //- @Ctor -//
-        public Sequencer()
-        {
-            //ViewDataList = new System.Collections.Generic.List<ViewData>();
-            VersionDataList = new System.Collections.Generic.List<VersionData>();
-            //+
-            _activeViewName = StateTracker.Get(StateEntryType.Value, "__$Sequence$ViewDataName");
-            ActiveVersionName = StateTracker.Get(StateEntryType.Value, "__$Sequence$VersionDataName");
-            //+
-            //if (!String.IsNullOrEmpty(_activeViewName))
-            //{
-            //    _activeViewData = new ViewData
-            //    {
-            //        Name = _activeViewName
-            //    };
-            //}
-        }
 
         //+
         //- #AddParsedSubObject -//
@@ -186,7 +181,7 @@ namespace Nalarium.Web.Processing.Sequence
             //    ViewDataList.Add(view);
             //    return;
             //}
-            VersionData version = obj as VersionData;
+            var version = obj as VersionData;
             if (version != null)
             {
                 VersionDataList.Add(version);
@@ -197,7 +192,7 @@ namespace Nalarium.Web.Processing.Sequence
         //- #OnInit -//
         protected override void OnInit(EventArgs e)
         {
-            Page page = Page as Page;
+            var page = Page as Page;
             //+ load all
             if (VersionDataList.Count == 0)
             {
@@ -259,7 +254,10 @@ namespace Nalarium.Web.Processing.Sequence
             //+
             if (!DisableViewAnalytics)
             {
-                Controls.Add(new ViewAnalytics() { Sequencer = this });
+                Controls.Add(new ViewAnalytics
+                             {
+                                 Sequencer = this
+                             });
             }
             //+
             base.OnInit(e);
@@ -290,12 +288,13 @@ namespace Nalarium.Web.Processing.Sequence
             //+
             ShowControl();
         }
+
         //- $ShowControl -//
         private void ShowControl()
         {
             //+ remove all
-            System.Collections.Generic.List<System.Web.UI.Control> toRemove = new System.Collections.Generic.List<System.Web.UI.Control>();
-            foreach (System.Web.UI.Control c in Controls)
+            var toRemove = new List<Control>();
+            foreach (Control c in Controls)
             {
                 if (c is View)
                 {
@@ -304,7 +303,7 @@ namespace Nalarium.Web.Processing.Sequence
             }
             while (toRemove.Count > 0)
             {
-                System.Web.UI.Control c = toRemove[0];
+                Control c = toRemove[0];
                 Controls.Remove(c);
                 toRemove.Remove(c);
             }
@@ -328,20 +327,20 @@ namespace Nalarium.Web.Processing.Sequence
             String path;
             if (String.IsNullOrEmpty(version))
             {
-                path = String.Format(System.Globalization.CultureInfo.InvariantCulture, @"{0}/{1}.ascx", SequenceName, viewName);
+                path = String.Format(CultureInfo.InvariantCulture, @"{0}/{1}.ascx", SequenceName, viewName);
             }
             else
             {
-                path = String.Format(System.Globalization.CultureInfo.InvariantCulture, @"{0}/{1}/{2}.ascx", SequenceName, viewName, ActiveVersionName);
-                if (!System.IO.File.Exists(Http.Server.MapPath(System.IO.Path.Combine(Nalarium.Web.Processing.Configuration.ProcessingSection.GetConfigSection().Sequences.RootPath, path))))
+                path = String.Format(CultureInfo.InvariantCulture, @"{0}/{1}/{2}.ascx", SequenceName, viewName, ActiveVersionName);
+                if (!File.Exists(Http.Server.MapPath(Path.Combine(ProcessingSection.GetConfigSection().Sequences.RootPath, path))))
                 {
-                    path = String.Format(System.Globalization.CultureInfo.InvariantCulture, @"{0}/{1}.ascx", SequenceName, viewName);
+                    path = String.Format(CultureInfo.InvariantCulture, @"{0}/{1}.ascx", SequenceName, viewName);
                 }
             }
             View control = null;
             try
             {
-                control = this.Page.LoadControl(path) as View;
+                control = Page.LoadControl(path) as View;
                 if (control == null)
                 {
                     throw new InvalidOperationException(Resource.Sequence_InvalidView);
@@ -352,7 +351,7 @@ namespace Nalarium.Web.Processing.Sequence
                 control.Visible = true;
                 try
                 {
-                    this.Page.RegisterRequiresControlState(control);
+                    Page.RegisterRequiresControlState(control);
                 }
                 catch
                 {
@@ -360,15 +359,15 @@ namespace Nalarium.Web.Processing.Sequence
             }
             catch (Exception ex)
             {
-                if (Nalarium.Web.Processing.WebProcessingReportController.Reporter.Initialized)
+                if (WebProcessingReportController.Reporter.Initialized)
                 {
-                    Map map = new Map();
+                    var map = new Map();
                     map.Add("Section", "Sequence");
                     map.Add("Message", ex.Message);
                     map.Add("Path", path);
                     map.Add("Exception Type", ex.GetType().FullName);
                     //+
-                    Nalarium.Web.Processing.WebProcessingReportController.Reporter.AddMap(map);
+                    WebProcessingReportController.Reporter.AddMap(map);
                 }
                 //+
                 throw;
@@ -379,5 +378,25 @@ namespace Nalarium.Web.Processing.Sequence
             //+
             return CurrentView;
         }
+
+        #region Nested type: Info
+
+        public static class Info
+        {
+            public const String Scope = "__$Nalarium$Sequence";
+            //+
+            public const String ActiveVersion = "ActiveVersion";
+            public const String PageTitle = "PageTitle";
+            //+
+            public const String PublicScope = "sequence";
+            //+
+            //public const String FirstMessage = PublicScope + "::first";
+            //public const String LastMessage = PublicScope + "::last";
+            //public const String NextMessage = PublicScope + "::next";
+            //public const String PreviousMessage = PublicScope + "::previous";
+            //public const String JumpMessage = PublicScope + "::jump";
+        }
+
+        #endregion
     }
 }

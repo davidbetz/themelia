@@ -1,12 +1,16 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Diagnostics;
+
 namespace Nalarium.Web.Processing.Data
 {
-    [System.Diagnostics.DebuggerDisplay("{Selector}, {Type}, {Text}")]
+    [DebuggerDisplay("{Selector}, {Type}, {Text}")]
     public class EndpointData
     {
         private String _guid;
@@ -84,20 +88,20 @@ namespace Nalarium.Web.Processing.Data
         //- @Clone -//
         public EndpointData Clone()
         {
-            Map newMap = new Map(this.ParameterMap);
-            EndpointData newData = new EndpointData
-            {
-                OriginalMatchText = this.OriginalMatchText,
-                Text = this.Text,
-                TextWithoutSlash = this.TextWithoutSlash,
-                Selector = this.Selector,
-                Type = this.Type,
-                ParameterValue = this.ParameterValue,
-                ParameterMap = newMap,
-                RequireSlash = this.RequireSlash,
-                SubEndpointDataList = this.SubEndpointDataList != null ? this.SubEndpointDataList.Clone() : new EndpointDataList(),
-                Source = this.Source
-            };
+            var newMap = new Map(ParameterMap);
+            var newData = new EndpointData
+                          {
+                              OriginalMatchText = OriginalMatchText,
+                              Text = Text,
+                              TextWithoutSlash = TextWithoutSlash,
+                              Selector = Selector,
+                              Type = Type,
+                              ParameterValue = ParameterValue,
+                              ParameterMap = newMap,
+                              RequireSlash = RequireSlash,
+                              SubEndpointDataList = SubEndpointDataList != null ? SubEndpointDataList.Clone() : new EndpointDataList(),
+                              Source = Source
+                          };
             //+
             return this;
         }
@@ -125,6 +129,7 @@ namespace Nalarium.Web.Processing.Data
         {
             return Create(type, text, name, String.Empty, false);
         }
+
         /// <summary>
         /// Creates an endpoint for programmatic use in a component.
         /// </summary>
@@ -137,6 +142,7 @@ namespace Nalarium.Web.Processing.Data
         {
             return Create(type, text, name, String.Empty, requireSlash);
         }
+
         /// <summary>
         /// Creates an endpoint for programmatic use in a component (with ending slash not required).
         /// </summary>
@@ -149,6 +155,7 @@ namespace Nalarium.Web.Processing.Data
         {
             return Create(type, text, name, parameter, false);
         }
+
         /// <summary>
         /// Creates an endpoint for programmatic use in a component.
         /// </summary>
@@ -161,15 +168,16 @@ namespace Nalarium.Web.Processing.Data
         public static EndpointData Create(SelectorType type, String text, String name, String parameter, Boolean requireSlash)
         {
             return new EndpointData
-            {
-                Type = name,
-                Selector = type,
-                RequireSlash = requireSlash,
-                Text = text,
-                TextWithoutSlash = GetTextWithoutSlash(text),
-                ParameterValue = parameter,
-            };
+                   {
+                       Type = name,
+                       Selector = type,
+                       RequireSlash = requireSlash,
+                       Text = text,
+                       TextWithoutSlash = GetTextWithoutSlash(text),
+                       ParameterValue = parameter,
+                   };
         }
+
         /// <summary>
         /// Creates an endpoint for programmatic use in a component.
         /// </summary>
@@ -182,6 +190,7 @@ namespace Nalarium.Web.Processing.Data
         {
             return Create(type, text, name, parameterMap, false);
         }
+
         /// <summary>
         /// Creates an endpoint for programmatic use in a component.
         /// </summary>
@@ -194,14 +203,14 @@ namespace Nalarium.Web.Processing.Data
         public static EndpointData Create(SelectorType type, String text, String name, Map parameterMap, Boolean requireSlash)
         {
             return new EndpointData
-            {
-                Type = name,
-                Selector = type,
-                RequireSlash = requireSlash,
-                Text = text,
-                TextWithoutSlash = GetTextWithoutSlash(text),
-                ParameterMap = parameterMap
-            };
+                   {
+                       Type = name,
+                       Selector = type,
+                       RequireSlash = requireSlash,
+                       Text = text,
+                       TextWithoutSlash = GetTextWithoutSlash(text),
+                       ParameterMap = parameterMap
+                   };
         }
     }
 }

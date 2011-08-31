@@ -1,40 +1,48 @@
 #region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
+using System.Diagnostics;
+using System.Reflection;
+using System.Text;
 using System.Web;
-//+
+using System.Web.Routing;
+using Nalarium.Configuration;
+using Nalarium.Web.AccessRule;
 using Nalarium.Web.Processing.Configuration;
 //+
+
 namespace Nalarium.Web.Processing
 {
     /// <summary>
     /// Not for programmatic use.
     /// </summary>
-    public class CoreModule : System.Web.IHttpModule
+    public class CoreModule : IHttpModule
     {
         //- ~Info -//
-        internal static class Info
-        {
-            public const String Scope = "__$Nalarium$Core";
-            //+
-            public const String DisableProcessing = "DisableProcessing";
-        }
 
-        private static Boolean _profilingEnabled = false;
-        private static Boolean _profilingIncludeExclusions = false;
-        internal static Boolean IsMvpAvailable = false;
-        internal static Boolean IsMvcAvailable = false;
-        internal static Type mvcHandlerType = null;
+        private static Boolean _profilingEnabled;
+        private static Boolean _profilingIncludeExclusions;
+        internal static Boolean IsMvpAvailable;
+        internal static Boolean IsMvcAvailable;
+        internal static Type mvcHandlerType;
 
         //+ field
+        private Boolean _isExclusion;
         private DateTime _startDateTime;
-        private Boolean _isExclusion = false;
 
         //+
         //- @Dispose -//
-        public void Dispose() { }
+
+        #region IHttpModule Members
+
+        public void Dispose()
+        {
+        }
 
         //+
         //- @Init -//
@@ -45,25 +53,27 @@ namespace Nalarium.Web.Processing
             _profilingEnabled = ProcessingSection.GetConfigSection().Profiling.Enabled;
             _profilingIncludeExclusions = ProcessingSection.GetConfigSection().Profiling.IncludeExclusions;
             //+
-            httpApplication.BeginRequest += new EventHandler(OnBeginRequest);
-            httpApplication.EndRequest += new EventHandler(OnEndRequest);
+            httpApplication.BeginRequest += OnBeginRequest;
+            httpApplication.EndRequest += OnEndRequest;
             //+
             //+
-            httpApplication.PostAuthorizeRequest += new EventHandler(OnPostAuthorizeRequest);
+            httpApplication.PostAuthorizeRequest += OnPostAuthorizeRequest;
             if (HttpRuntime.UsingIntegratedPipeline)
             {
-                httpApplication.PostResolveRequestCache += new EventHandler(OnProcessRoute);
-                httpApplication.PostMapRequestHandler += new EventHandler(OnSetHandler);
+                httpApplication.PostResolveRequestCache += OnProcessRoute;
+                httpApplication.PostMapRequestHandler += OnSetHandler;
             }
             else
             {
-                httpApplication.PostMapRequestHandler += new EventHandler(OnProcessRoute);
-                httpApplication.PostMapRequestHandler += new EventHandler(OnSetHandler);
+                httpApplication.PostMapRequestHandler += OnProcessRoute;
+                httpApplication.PostMapRequestHandler += OnSetHandler;
             }
-            httpApplication.PostAcquireRequestState += new EventHandler(OnPostAcquireRequestState);
+            httpApplication.PostAcquireRequestState += OnPostAcquireRequestState;
             //+
             httpApplication.Error += ErrorHandler.OnHandleError;
         }
+
+        #endregion
 
         //- $BeginRequest -//
         private void OnBeginRequest(Object sender, EventArgs ea)
@@ -71,7 +81,7 @@ namespace Nalarium.Web.Processing
             //+ exclusion
             new ExclusionInitProcessor().Execute();
             _isExclusion = FlowControl.IsHalted;
-            HttpData.SetScopedItem<String>(Info.Scope, "HTTP_X_ORIGINAL_URL", Http.AbsoluteUrl);
+            HttpData.SetScopedItem(Info.Scope, "HTTP_X_ORIGINAL_URL", Http.AbsoluteUrl);
             //+ profiling
             if (_profilingEnabled && (!_isExclusion || (_isExclusion && _profilingIncludeExclusions)))
             {
@@ -86,10 +96,10 @@ namespace Nalarium.Web.Processing
             {
                 DateTime endDateTime = DateTime.Now;
                 Double milliSeconds = (endDateTime - _startDateTime).TotalMilliseconds;
-                System.Text.StringBuilder builder = new System.Text.StringBuilder();
+                var builder = new StringBuilder();
                 builder.Append(Http.AbsolutePath + ", ");
                 builder.Append(milliSeconds.ToString() + "ms");
-                System.Diagnostics.Debug.WriteLine(builder.ToString());
+                Debug.WriteLine(builder.ToString());
             }
         }
 
@@ -107,10 +117,10 @@ namespace Nalarium.Web.Processing
             {
                 disableProcessing = section.DisableProcessing;
             }
-            HttpData.SetScopedItem<Boolean>(Info.Scope, Info.DisableProcessing, disableProcessing);
+            HttpData.SetScopedItem(Info.Scope, Info.DisableProcessing, disableProcessing);
             if (disableProcessing == false)
             {
-                HttpApplication ha = sender as HttpApplication;
+                var ha = sender as HttpApplication;
                 RouteActivator.RunContextInitProcessors(ha.Context);
                 _isExclusion = FlowControl.IsHalted;
                 if (_isExclusion)
@@ -120,7 +130,7 @@ namespace Nalarium.Web.Processing
                 //+
                 if (Http.IPAddress.Equals("72.47.154.93"))
                 {
-                    AccessRule.AccessRuleChecker.SystemCheck(Nalarium.Web.Processing.Configuration.ProcessingSection.GetConfigSection().WebDomain.AccessRuleGroup);
+                    AccessRuleChecker.SystemCheck(ProcessingSection.GetConfigSection().WebDomain.AccessRuleGroup);
                 }
             }
         }
@@ -135,7 +145,7 @@ namespace Nalarium.Web.Processing
             //+
             if (HttpData.GetScopedItem<Boolean>(Info.Scope, Info.DisableProcessing) == false)
             {
-                HttpApplication ha = sender as HttpApplication;
+                var ha = sender as HttpApplication;
                 HttpContext context = ha.Context;
                 //+
                 FlowControl.ActiveHandler = RouteActivator.Create(context);
@@ -154,10 +164,10 @@ namespace Nalarium.Web.Processing
                 Boolean hasDataToSend = WebProcessingReportController.Reporter.HasDataToSend;
                 if (hasDataToSend)
                 {
-                    String name = Nalarium.Configuration.SystemSection.GetConfigSection().AppInfo.Name;
+                    String name = SystemSection.GetConfigSection().AppInfo.Name;
                     if (!String.IsNullOrEmpty(name))
                     {
-                        Map map = new Map();
+                        var map = new Map();
                         map.Add("App Name", name);
                         WebProcessingReportController.Reporter.InsertMap(map, 0);
                     }
@@ -177,7 +187,7 @@ namespace Nalarium.Web.Processing
             //+
             if (HttpData.GetScopedItem<Boolean>(Info.Scope, Info.DisableProcessing) == false)
             {
-                HttpApplication ha = sender as HttpApplication;
+                var ha = sender as HttpApplication;
                 HttpContext context = ha.Context;
                 //+
                 FlowControl.ActiveHandler = RouteActivator.Create(context);
@@ -185,8 +195,8 @@ namespace Nalarium.Web.Processing
                     && !(FlowControl.ActiveHandler is PassThroughHttpHandler)
                     && !(FlowControl.ActiveHandler is DummyHttpHandler))
                 {
-                    Type type = typeof(System.Web.Routing.UrlRoutingModule);
-                    System.Reflection.FieldInfo fi = type.GetField("_requestDataKey", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+                    Type type = typeof(UrlRoutingModule);
+                    FieldInfo fi = type.GetField("_requestDataKey", BindingFlags.Static | BindingFlags.NonPublic);
                     if (fi != null)
                     {
                         Object key = fi.GetValue(null);
@@ -205,10 +215,10 @@ namespace Nalarium.Web.Processing
                 Boolean hasDataToSend = WebProcessingReportController.Reporter.HasDataToSend;
                 if (hasDataToSend)
                 {
-                    String name = Nalarium.Configuration.SystemSection.GetConfigSection().AppInfo.Name;
+                    String name = SystemSection.GetConfigSection().AppInfo.Name;
                     if (!String.IsNullOrEmpty(name))
                     {
-                        Map map = new Map();
+                        var map = new Map();
                         map.Add("App Name", name);
                         WebProcessingReportController.Reporter.InsertMap(map, 0);
                     }
@@ -244,10 +254,10 @@ namespace Nalarium.Web.Processing
             {
                 if (WebProcessingReportController.Reporter.HasDataToSend)
                 {
-                    Map map = new Map();
+                    var map = new Map();
                     map.Add("Begin", "Post State Processor Section");
                     WebProcessingReportController.Reporter.InsertMap(map, 0);
-                    String name = Nalarium.Configuration.SystemSection.GetConfigSection().AppInfo.Name;
+                    String name = SystemSection.GetConfigSection().AppInfo.Name;
                     if (!String.IsNullOrEmpty(name))
                     {
                         map = new Map();
@@ -259,5 +269,16 @@ namespace Nalarium.Web.Processing
                 }
             }
         }
+
+        #region Nested type: Info
+
+        internal static class Info
+        {
+            public const String Scope = "__$Nalarium$Core";
+            //+
+            public const String DisableProcessing = "DisableProcessing";
+        }
+
+        #endregion
     }
 }

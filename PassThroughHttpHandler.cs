@@ -1,14 +1,29 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+
 namespace Nalarium.Web.Processing
 {
     public class PassThroughHttpHandler : ReusableSessionHttpHandler
     {
         //- @ForceUse -//
+
+        //+
+        //- @Ctor -//
+        public PassThroughHttpHandler()
+        {
+        }
+
+        public PassThroughHttpHandler(Boolean force)
+        {
+            ForceUse = force;
+        }
+
         /// <summary>
         /// When true, passthrough is used.  Can only be set to true.  Setting to false has no effect.
         /// </summary>
@@ -23,19 +38,9 @@ namespace Nalarium.Web.Processing
                 //++ only allow setting to true
                 if (value)
                 {
-                    HttpData.SetScopedItem<Boolean>(RouteActivator.Info.Scope, RouteActivator.Info.PassThroughForceUse, true);
+                    HttpData.SetScopedItem(RouteActivator.Info.Scope, RouteActivator.Info.PassThroughForceUse, true);
                 }
             }
-        }
-
-        //+
-        //- @Ctor -//
-        public PassThroughHttpHandler()
-        {
-        }
-        public PassThroughHttpHandler(Boolean force)
-        {
-            ForceUse = force;
         }
 
         //+

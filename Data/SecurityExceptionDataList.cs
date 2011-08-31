@@ -1,11 +1,14 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//+
+
 namespace Nalarium.Web.Processing.Data
 {
     public class SecurityExceptionDataList : List<SecurityExceptionData>
@@ -28,13 +31,13 @@ namespace Nalarium.Web.Processing.Data
         //- ~Clone -//
         internal SecurityExceptionDataList Clone()
         {
-            SecurityExceptionDataList list = new SecurityExceptionDataList();
+            var list = new SecurityExceptionDataList();
             foreach (SecurityExceptionData data in this)
             {
                 list.Add(new SecurityExceptionData
-                {
-                    Key = data.Key
-                });
+                         {
+                             Key = data.Key
+                         });
             }
             //+
             return list;

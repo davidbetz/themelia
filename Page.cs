@@ -1,41 +1,28 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
+using System.Collections.Generic;
 using System.Linq;
-//+
+using System.Reflection;
+using System.Web;
+using Nalarium.Activation;
+using Nalarium.Reflection;
+
 namespace Nalarium.Web.Processing
 {
     public abstract class Page : System.Web.UI.Page
     {
-        internal class PageInitMetadata
-        {
-            //- @PageInitializer -//
-            public PageInitializer PageInitializer { get; set; }
+        private readonly Map<String, PageInitMetadata> _initializerCache = new Map<String, PageInitMetadata>();
+        private readonly Object _lock = new Object();
 
-            //- @Type -//
-            public Type Type { get; set; }
-        }
-
-        private Object _lock = new Object();
-        private Map<String, PageInitMetadata> _initializerCache = new Map<String, PageInitMetadata>();
-
-        //+
-        protected PageInitializer PageInitializer { get; set; }
-
-        //- @ViewData -//
-        protected internal Map ViewData { get; set; }
-
-        //- ~IsSimplePage -//
-        internal Boolean IsSimplePage { get; set; }
-
-        //+
-        //- @Ctor -//
         public Page()
-            : base()
         {
-            Nalarium.Web.Processing.PageEndpointHttpHandler pageEndpointHttpHandler = (System.Web.HttpContext.Current.CurrentHandler as Nalarium.Web.Processing.PageEndpointHttpHandler);
+            var pageEndpointHttpHandler = (HttpContext.Current.CurrentHandler as PageEndpointHttpHandler);
             if (pageEndpointHttpHandler == null)
             {
                 return;
@@ -73,7 +60,7 @@ namespace Nalarium.Web.Processing
                 }
                 else
                 {
-                    System.Collections.Generic.List<Type> pageInitializerTypeList = Nalarium.Web.ScannedTypeCache.GetTypeData("pageInitializer");
+                    List<Type> pageInitializerTypeList = ScannedTypeCache.GetTypeData("pageInitializer");
                     if (pageInitializerTypeList == null)
                     {
                         return;
@@ -83,12 +70,12 @@ namespace Nalarium.Web.Processing
                     {
                         return;
                     }
-                    PageInitializer = Nalarium.Activation.ObjectCreator.Create(pageInitializerType) as PageInitializer;
+                    PageInitializer = ObjectCreator.Create(pageInitializerType) as PageInitializer;
                     _initializerCache.Add(segmentName, new PageInitMetadata
-                    {
-                        PageInitializer = PageInitializer,
-                        Type = pageInitializerType
-                    });
+                                                       {
+                                                           PageInitializer = PageInitializer,
+                                                           Type = pageInitializerType
+                                                       });
                     if (PageInitializer == null)
                     {
                         return;
@@ -99,8 +86,8 @@ namespace Nalarium.Web.Processing
                     PageInitializer.InitData();
                 }
             }
-            System.Reflection.MethodInfo pageMethodInfo = pageInitializerType.GetMethod(pageName);
-            RunForVerbsAttribute runForVerbsAttribute = Nalarium.Reflection.AttributeReader.ReadMethodAttribute<RunForVerbsAttribute>(pageMethodInfo);
+            MethodInfo pageMethodInfo = pageInitializerType.GetMethod(pageName);
+            var runForVerbsAttribute = AttributeReader.ReadMethodAttribute<RunForVerbsAttribute>(pageMethodInfo);
             if (runForVerbsAttribute == null)
             {
                 return;
@@ -112,5 +99,30 @@ namespace Nalarium.Web.Processing
                 pageMethodInfo.Invoke(PageInitializer, null);
             }
         }
+
+        //+
+        protected PageInitializer PageInitializer { get; set; }
+
+        //- @ViewData -//
+        protected internal Map ViewData { get; set; }
+
+        //- ~IsSimplePage -//
+        internal Boolean IsSimplePage { get; set; }
+
+        #region Nested type: PageInitMetadata
+
+        internal class PageInitMetadata
+        {
+            //- @PageInitializer -//
+            public PageInitializer PageInitializer { get; set; }
+
+            //- @Type -//
+            public Type Type { get; set; }
+        }
+
+        #endregion
+
+        //+
+        //- @Ctor -//
     }
 }

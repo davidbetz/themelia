@@ -1,24 +1,29 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
+//+
+//+
 using System;
 using System.Linq;
-//+
+using Nalarium.Activation;
+using Nalarium.Web.Globalization;
 using Nalarium.Web.Processing.Data;
 using Nalarium.Web.Security;
-//+
 using RouteActivatorInfo = Nalarium.Web.Processing.RouteActivator.Info;
-//+
+
 namespace Nalarium.Web.Processing
 {
-    internal class SecurityStateProcessor : Nalarium.Web.Processing.StateProcessor
+    internal class SecurityStateProcessor : StateProcessor
     {
-        private static Object _lock = new Object();
+        private static readonly Object _lock = new Object();
 
         //+
         //- ~Execute -//
-        public override StateProcessor Execute( )
+        public override StateProcessor Execute()
         {
             WebDomainData data = NalariumContext.Current.WebDomain.Configuration;
             if (data.SecurityData.Disabled)
@@ -29,10 +34,10 @@ namespace Nalarium.Web.Processing
             {
                 if (SecurityData.SecurityValidator == null)
                 {
-                    SecurityData.SecurityValidator = Nalarium.Activation.ObjectCreator.CreateAs<ISecurityValidator>(data.SecurityData.ValidatorType);
+                    SecurityData.SecurityValidator = ObjectCreator.CreateAs<ISecurityValidator>(data.SecurityData.ValidatorType);
                     if (SecurityData.SecurityValidator == null)
                     {
-                        throw new ArgumentException(Nalarium.Web.Globalization.ResourceAccessor.GetString("Security_InvalidValidator"));
+                        throw new ArgumentException(ResourceAccessor.GetString("Security_InvalidValidator"));
                     }
                 }
             }
@@ -67,7 +72,7 @@ namespace Nalarium.Web.Processing
                 return null;
             }
             //+
-            String key = HttpData.GetScopedItem<String>(RouteActivatorInfo.Scope, RouteActivatorInfo.Text);
+            var key = HttpData.GetScopedItem<String>(RouteActivatorInfo.Scope, RouteActivatorInfo.Text);
             if (String.IsNullOrEmpty(key))
             {
                 key = "/";

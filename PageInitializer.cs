@@ -1,15 +1,24 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using Nalarium.Data.Cached;
-//+
+
 namespace Nalarium.Web.Processing
 {
     public abstract class PageInitializer
     {
         //- ~PageName -//
+        public PageInitializer()
+        {
+            ModelTypeMap = new Map<String, Type>();
+            Model = new Map<String, Model>();
+        }
+
         internal String PageName { get; set; }
 
         //- ~SegmentName -//
@@ -72,27 +81,22 @@ namespace Nalarium.Web.Processing
 
         //+
         //- @Ctor -//
-        public PageInitializer()
-        {
-            ModelTypeMap = new Map<String, Type>();
-            Model = new Map<String, Model>();
-        }
 
         //- #InitData -//
-        internal protected virtual void InitData()
+        protected internal virtual void InitData()
         {
         }
 
         //- @GetCache -//
         public T GetCache<T>(String name)
         {
-            return Nalarium.Data.Cached.CachedDataFactory.Get<T>(DataScope, name);
+            return CachedDataFactory.Get<T>(DataScope, name);
         }
 
         //- @RegisterData -//
         public Boolean RegisterData<T>(String name, Func<T> runner)
         {
-            return CachedDataFactory.Register<T>(DataScope, name, runner);
+            return CachedDataFactory.Register(DataScope, name, runner);
         }
 
         //- @SetPage -//

@@ -1,9 +1,13 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Web;
+
 namespace Nalarium.Web.Processing
 {
     /// <summary>
@@ -15,17 +19,17 @@ namespace Nalarium.Web.Processing
 
         //+
         //- #Context -//
-        protected System.Web.HttpContext Context { get; set; }
+        protected HttpContext Context { get; set; }
 
         //- #ParameterArray -//
         protected Object[] ParameterArray { get; set; }
 
         //+
         //- ~Initialize -//
-        internal void Initialize(System.Web.HttpContext context, params Object[] parameterArray)
+        internal void Initialize(HttpContext context, params Object[] parameterArray)
         {
-            this.Context = context;
-            this.ParameterArray = parameterArray;
+            Context = context;
+            ParameterArray = parameterArray;
         }
 
         //- @Execute -//
@@ -35,6 +39,6 @@ namespace Nalarium.Web.Processing
         /// <param name="context">The HttpContext object.</param>
         /// <param name="parameterArray">The optional parameter array.</param>
         /// <returns>The new HTTP handler to use.  null means to use the existing handler</returns>
-        public abstract System.Web.IHttpHandler Execute(params Object[] parameterArray);
+        public abstract IHttpHandler Execute(params Object[] parameterArray);
     }
 }

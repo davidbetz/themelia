@@ -1,18 +1,26 @@
 #region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Resources;
-//+
+using Nalarium.Globalization;
+using Nalarium.Web.Controls;
+
 namespace Nalarium.Web.Processing.Sequence
 {
     /// <summary>
     /// This is the base class for all sequence pages.
     /// </summary>
-    public abstract class LocalizedPage : Page, Nalarium.Web.Controls.ILocalizedPage
+    public abstract class LocalizedPage : Page, ILocalizedPage
     {
         //- @AssemblyName -//
+
+        #region ILocalizedPage Members
+
         /// <summary>
         /// Represents the name of the assembly from which to pull a resource manager.
         /// </summary>
@@ -34,13 +42,15 @@ namespace Nalarium.Web.Processing.Sequence
         /// <summary>
         /// Represents the currently active resource manager.
         /// </summary>
-        public System.Resources.ResourceManager CurrentResourceManager
+        public ResourceManager CurrentResourceManager
         {
             get
             {
-                Nalarium.Globalization.ResourceAccessor.RegisterResourceManager(AssemblyName, BuiltInCultureArray);
-                return Nalarium.Globalization.ResourceAccessor.LoadResourceManager(AssemblyName, DefaultResourceManager);
+                ResourceAccessor.RegisterResourceManager(AssemblyName, BuiltInCultureArray);
+                return ResourceAccessor.LoadResourceManager(AssemblyName, DefaultResourceManager);
             }
         }
+
+        #endregion
     }
 }

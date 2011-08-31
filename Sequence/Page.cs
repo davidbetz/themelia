@@ -1,13 +1,17 @@
 #region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//+
+using Nalarium.Web.Controls;
 using Nalarium.Web.Processing.Data;
 //+
+
 namespace Nalarium.Web.Processing.Sequence
 {
     /// <summary>
@@ -23,7 +27,7 @@ namespace Nalarium.Web.Processing.Sequence
         {
             get
             {
-                Sequencer sequencer = ControlFinder.FindControlRecursivelyByType<Sequencer>(this, true);
+                var sequencer = ControlFinder.FindControlRecursivelyByType<Sequencer>(this, true);
                 if (sequencer == null)
                 {
                     throw new InvalidOperationException(Resource.Sequence_SequencerNotFound);
@@ -34,21 +38,6 @@ namespace Nalarium.Web.Processing.Sequence
         }
 
         //- @SelectInitView -//
-        /// <summary>
-        /// Used to choose the initial sequence view.
-        /// </summary>
-        /// <returns>Name of initial view.</returns>
-        abstract public String SelectInitView();
-
-        //- @SelectVersion -//
-        /// <summary>
-        /// Used to choose the view version.
-        /// </summary>
-        /// <returns>Name of version or null if random.</returns>
-        public virtual String SelectVersion()
-        {
-            return null;
-        }
 
         //- @SequenceData -//
         /// <summary>
@@ -74,6 +63,22 @@ namespace Nalarium.Web.Processing.Sequence
         /// </summary>
         public String GoogleAnalyticsTrackingCode { get; set; }
 
+        /// <summary>
+        /// Used to choose the initial sequence view.
+        /// </summary>
+        /// <returns>Name of initial view.</returns>
+        public abstract String SelectInitView();
+
+        //- @SelectVersion -//
+        /// <summary>
+        /// Used to choose the view version.
+        /// </summary>
+        /// <returns>Name of version or null if random.</returns>
+        public virtual String SelectVersion()
+        {
+            return null;
+        }
+
         //- @SelectVersion -//
         /// <summary>
         /// Used to choose the view version.
@@ -91,9 +96,9 @@ namespace Nalarium.Web.Processing.Sequence
             //+ analytics
             if (EnableGoogleAnalytics && !String.IsNullOrEmpty(GoogleAnalyticsTrackingCode) && Sequencer != null)
             {
-                if (ControlFinder.FindControlRecursivelyByType<Nalarium.Web.Controls.GoogleAnalytics>(Page) == null)
+                if (ControlFinder.FindControlRecursivelyByType<GoogleAnalytics>(Page) == null)
                 {
-                    Sequencer.Controls.Add(new Nalarium.Web.Controls.GoogleAnalytics(GoogleAnalyticsTrackingCode));
+                    Sequencer.Controls.Add(new GoogleAnalytics(GoogleAnalyticsTrackingCode));
                 }
             }
             //+
@@ -163,7 +168,7 @@ namespace Nalarium.Web.Processing.Sequence
             String title = Sequencer.CurrentView.PageTitle;
             if (!String.IsNullOrEmpty(title))
             {
-                this.Title = title;
+                Title = title;
             }
             //+
             base.OnPreRenderComplete(e);

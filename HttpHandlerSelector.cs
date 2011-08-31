@@ -1,15 +1,19 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Web;
-//+
 using Nalarium.Activation;
 using Nalarium.Web.Processing.Data;
 //+
+
 namespace Nalarium.Web.Processing
 {
     internal class HttpHandlerSelector
@@ -79,6 +83,7 @@ namespace Nalarium.Web.Processing
         {
             return AttemptHttpHandlerCreate(endpoint, endpoint.Type);
         }
+
         //- ~AttemptHttpHandlerCreate-//
         internal IHttpHandler AttemptHttpHandlerCreate(EndpointData endpoint, String type)
         {
@@ -87,7 +92,7 @@ namespace Nalarium.Web.Processing
             {
                 if (WebProcessingReportController.Reporter.Initialized)
                 {
-                    Map map = new Map();
+                    var map = new Map();
                     map.Add("Section", "Handler Creation");
                     map.Add("Message", "Could not create handler.  Either the type name is incorrect or the required handler factory was not installed correctly.");
                     map.Add("Handler Name", endpoint.Type);
@@ -136,7 +141,7 @@ namespace Nalarium.Web.Processing
             //+
             if (!text.StartsWith("{") && RouteCache.HandlerFactoryCache != null)
             {
-                String lowerCaseText = text.ToLower(System.Globalization.CultureInfo.CurrentCulture);
+                String lowerCaseText = text.ToLower(CultureInfo.CurrentCulture);
                 List<IFactory> handlerFactoryList = RouteCache.HandlerFactoryCache.GetValueList();
                 foreach (IFactory factory in handlerFactoryList)
                 {
@@ -150,11 +155,11 @@ namespace Nalarium.Web.Processing
             if (handler == null && text.StartsWith("{"))
             {
                 text = text.Substring(1, text.Length - 2);
-                System.Collections.Generic.List<Type> list = ScannedTypeCache.GetTypeData("httpHandler");
+                List<Type> list = ScannedTypeCache.GetTypeData("httpHandler");
                 Type httpHandlerType = list.SingleOrDefault(p => p.Name == text + "HttpHandler");
                 if (httpHandlerType != null)
                 {
-                    handler = Nalarium.Activation.ObjectCreator.CreateAs<IHttpHandler>(httpHandlerType);
+                    handler = ObjectCreator.CreateAs<IHttpHandler>(httpHandlerType);
                 }
             }
             //+

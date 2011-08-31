@@ -1,10 +1,13 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Collections.Generic;
-//+
+
 namespace Nalarium.Web.Processing.Data
 {
     public class FactoryDataList : List<FactoryData>
@@ -13,6 +16,7 @@ namespace Nalarium.Web.Processing.Data
         public FactoryDataList()
         {
         }
+
         public FactoryDataList(IEnumerable<FactoryData> collection)
             : base(collection)
         {
@@ -25,16 +29,16 @@ namespace Nalarium.Web.Processing.Data
         //- ~Clone -//
         internal FactoryDataList Clone()
         {
-            FactoryDataList list = new FactoryDataList();
+            var list = new FactoryDataList();
             foreach (FactoryData data in this)
             {
                 list.Add(new FactoryData
-                {
-                    Priority = data.Priority,
-                    FactoryType = data.FactoryType,
-                    ParameterArray = data.ParameterArray,
-                    Source = data.Source
-                });
+                         {
+                             Priority = data.Priority,
+                             FactoryType = data.FactoryType,
+                             ParameterArray = data.ParameterArray,
+                             Source = data.Source
+                         });
             }
             //+
             return list;

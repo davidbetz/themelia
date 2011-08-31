@@ -1,12 +1,17 @@
 #region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Web.UI;
+using Nalarium.Web.Controls;
+
 namespace Nalarium.Web.Processing.Sequence
 {
-    internal class ViewAnalytics : System.Web.UI.Control
+    internal class ViewAnalytics : Control
     {
         //- @Sequencer -//
         internal Sequencer Sequencer { get; set; }
@@ -14,7 +19,7 @@ namespace Nalarium.Web.Processing.Sequence
         //+
         protected override void OnPreRender(EventArgs e)
         {
-            Nalarium.Web.Controls.GoogleAnalytics analyticsControl = ControlFinder.FindControlRecursivelyByType<Nalarium.Web.Controls.GoogleAnalytics>(Page);
+            var analyticsControl = ControlFinder.FindControlRecursivelyByType<GoogleAnalytics>(Page);
             if (analyticsControl == null)
             {
                 return;
