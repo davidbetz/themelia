@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,10 +10,30 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nalarium.Web.Processing</RootNamespace>
     <AssemblyName>Nalarium.Web.Processing</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Nalarium.snk</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,6 +43,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,11 +52,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Nalarium, Version=3.0.0.0, Culture=neutral, PublicKeyToken=dc6429114df2bd49, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\_REFERENCE\Debug\Nalarium.dll</HintPath>
+      <HintPath>C:\_REFERENCE\Debug\Nalarium.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -62,7 +84,7 @@
     <Compile Include="CommonHandlerFactory.cs" />
     <Compile Include="CommonProcessorFactory.cs" />
     <Compile Include="ConfigurationLoader.cs" />
-    <Compile Include="ConfigurationPreProcessor.cs" />
+    <Compile Include="ConfigurationInitProcessor.cs" />
     <Compile Include="Configuration\Activation\WebExceptionTypeFactory.cs" />
     <Compile Include="Configuration\IProcessorElement.cs" />
     <Compile Include="Configuration\Profiling\ProfilingElement.cs" />
@@ -102,14 +124,14 @@
     <Compile Include="Data\ErrorProcessorDataList.cs" />
     <Compile Include="Data\FactoryData.cs" />
     <Compile Include="Data\FactoryDataList.cs" />
-    <Compile Include="Data\MidProcessorDataList.cs" />
+    <Compile Include="Data\SelectionProcessorDataList.cs" />
     <Compile Include="Data\ObjectFactoryDataList.cs" />
     <Compile Include="Data\ParameterData.cs" />
     <Compile Include="Data\ParameterDataList.cs" />
-    <Compile Include="Data\PostProcessorDataList.cs" />
+    <Compile Include="Data\OverrideProcessorDataList.cs" />
     <Compile Include="Data\PostRenderProcessorDataList.cs" />
-    <Compile Include="Data\PostStateProcessorDataList.cs" />
-    <Compile Include="Data\PreProcessorDataList.cs" />
+    <Compile Include="Data\StateProcessorDataList.cs" />
+    <Compile Include="Data\InitProcessorDataList.cs" />
     <Compile Include="Data\ProcessorData.cs" />
     <Compile Include="Data\ProcessorDataList.cs" />
     <Compile Include="Data\ProcessorFactoryDataList.cs" />
@@ -124,18 +146,18 @@
     <Compile Include="Data\ViewDataList.cs" />
     <Compile Include="Data\WebDomainData.cs" />
     <Compile Include="Data\WebDomainDataList.cs" />
-    <Compile Include="DebugPreProcessor.cs" />
-    <Compile Include="DefaultPageMidProcessor.cs" />
+    <Compile Include="DebugInitProcessor.cs" />
+    <Compile Include="DefaultPageSelectionProcessor.cs" />
     <Compile Include="DefaultPageOverrideProcessor.cs" />
-    <Compile Include="DefaultPagePreProcessor.cs" />
+    <Compile Include="DefaultPageInitProcessor.cs" />
     <Compile Include="DefaultType.cs" />
     <Compile Include="Endpoint.cs" />
     <Compile Include="EndpointSetMode.cs" />
     <Compile Include="EntityNotFoundException.cs" />
     <Compile Include="ErrorHandler.cs" />
-    <Compile Include="ExclusionPreProcessor.cs" />
+    <Compile Include="ExclusionInitProcessor.cs" />
     <Compile Include="FaviconMode.cs" />
-    <Compile Include="FileAliasPreProcessor.cs" />
+    <Compile Include="FileAliasInitProcessor.cs" />
     <Compile Include="FlowControl.cs" />
     <Compile Include="HttpHandlerSelector.cs" />
     <Compile Include="InvalidFactoryException.cs" />
@@ -146,10 +168,10 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="PageInitializer.cs" />
-    <Compile Include="PageProtectionPreProcessor.cs" />
+    <Compile Include="PageProtectionSelectionProcessor.cs" />
     <Compile Include="PassThroughHandlerCreator.cs" />
     <Compile Include="PassThroughHttpHandler.cs" />
-    <Compile Include="PassThroughPreProcessor.cs" />
+    <Compile Include="PassThroughInitProcessor.cs" />
     <Compile Include="PathMatcher.cs" />
     <Compile Include="ProcessorActivator.cs" />
     <Compile Include="ProcessorRunner.cs" />
@@ -161,7 +183,7 @@
     <Compile Include="RouteCache.cs" />
     <Compile Include="ScannedTypeCacheInitProcessor.cs" />
     <Compile Include="SecurityStateProcessor.cs" />
-    <Compile Include="Sequence\ISequenceInitializer.cs" />
+    <Compile Include="Sequence\IInitializer.cs" />
     <Compile Include="Sequence\LocalizedPage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -175,11 +197,11 @@
     </Compile>
     <Compile Include="Sequence\ViewAnalytics.cs" />
     <Compile Include="Sequence\ViewVersionControlBuilder.cs" />
-    <Compile Include="ServiceAliasPreProcessor.cs" />
+    <Compile Include="ServiceEndpointInitProcessor.cs" />
     <Compile Include="SessionStateProcessor.cs" />
+    <Compile Include="WebDomainOld.cs" />
     <Compile Include="WebDomain.cs" />
-    <Compile Include="WebDomain2.cs" />
-    <Compile Include="WebDomainPreProcessor.cs" />
+    <Compile Include="WebDomainInitProcessor.cs" />
     <Compile Include="WebProcessingReportController.cs" />
     <Compile Include="_Base\Component.cs" />
     <Compile Include="_Base\ContextInitProcessor.cs" />
@@ -224,6 +246,23 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Nalarium.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
