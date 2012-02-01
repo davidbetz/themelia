@@ -272,7 +272,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <PostBuildEvent>xcopy $(TargetDir)Nalarium.Web.* %25HOMEDRIVE%25\_REFERENCE\$(ConfigurationName)\* /E /C /Q /R /H /Y</PostBuildEvent>
-  </PropertyGroup>
+  <Target Name="AfterBuild">
+		<Copy SkipUnchangedFiles="true" SourceFiles="$(OutDir)\$(TargetFileName)" DestinationFiles="$(HomeDrive)\_REFERENCE\$(Configuration)\$(TargetFileName)" />
+  </Target>
 </Project>
