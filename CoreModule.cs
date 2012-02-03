@@ -27,9 +27,9 @@ namespace Nalarium.Web.Processing
 
         private static Boolean _profilingEnabled;
         private static Boolean _profilingIncludeExclusions;
-        internal static Boolean IsMvpAvailable;
-        internal static Boolean IsMvcAvailable;
-        internal static Type mvcHandlerType;
+        //internal static Boolean IsMvpAvailable;
+        //internal static Boolean IsMvcAvailable;
+        //internal static Type mvcHandlerType;
 
         //+ field
         private Boolean _isExclusion;
