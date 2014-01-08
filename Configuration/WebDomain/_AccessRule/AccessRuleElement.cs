@@ -1,66 +1,40 @@
 ﻿#region Copyright
-
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
-
 #endregion
-
 using System;
 using System.Configuration;
-using System.Diagnostics;
-using Nalarium.Configuration;
-using Nalarium.Configuration.AppConfig;
-
+//+
 namespace Nalarium.Web.Processing.Configuration
 {
-    [DebuggerDisplay("{Selector}, {Type}, {Text}")]
-    public class EndpointElement : WithParameterArrayElement
+    [System.Diagnostics.DebuggerDisplay("{Name}, {AccessType}, {Text}, {Enabled}")]
+    public class AccessRuleElement : Nalarium.Configuration.CommentableElement
     {
-        //- ~RequireSlash -//
-        [ConfigurationProperty("requireSlash")]
-        internal Boolean RequireSlash
+        //- @Name -//
+        [ConfigurationProperty("name", IsRequired = false)]
+        public String Name
         {
             get
             {
-                return (Boolean)this["requireSlash"];
-            }
-        }
-
-        //- @Selector -//
-        [ConfigurationProperty("selector", DefaultValue = SelectorType.WebDomainPathStartsWith)]
-        public SelectorType Selector
-        {
-            get
-            {
-                return (SelectorType)this["selector"];
+                return (String)this["name"];
             }
             set
             {
-                this["selector"] = value;
+                this["name"] = value;
             }
         }
 
-        //- @Type -//
+        //- @AccessType -//
         [ConfigurationProperty("type", IsRequired = true)]
-        public String Type
+        public Nalarium.Web.Processing.AccessType AccessType
         {
             get
             {
-                return (String)this["type"];
+                return (Nalarium.Web.Processing.AccessType)this["type"];
             }
             set
             {
                 this["type"] = value;
-            }
-        }
-
-        //- @AccessRuleGroup -//
-        [ConfigurationProperty("accessRuleGroup")]
-        public String AccessRuleGroup
-        {
-            get
-            {
-                return (String)this["accessRuleGroup"];
             }
         }
 
@@ -79,7 +53,7 @@ namespace Nalarium.Web.Processing.Configuration
         }
 
         //- @Parameter -//
-        [ConfigurationProperty("parameter")]
+        [ConfigurationProperty("parameter", DefaultValue = " ")]
         public String Parameter
         {
             get
@@ -89,6 +63,20 @@ namespace Nalarium.Web.Processing.Configuration
             set
             {
                 this["parameter"] = value;
+            }
+        }
+
+        //- @ActionType -//
+        [ConfigurationProperty("actionType", DefaultValue = Nalarium.Web.Processing.ActionType.Write)]
+        public Nalarium.Web.Processing.ActionType ActionType
+        {
+            get
+            {
+                return (Nalarium.Web.Processing.ActionType)this["actionType"];
+            }
+            set
+            {
+                this["actionType"] = value;
             }
         }
 
@@ -106,14 +94,17 @@ namespace Nalarium.Web.Processing.Configuration
             }
         }
 
-        //- @Endpoints -//
-        [ConfigurationProperty("subEndpoints")]
-        [ConfigurationCollection(typeof(EndpointElement), AddItemName = "add")]
-        public EndpointCollection SubEndpoints
+        //- @Priority -//
+        [ConfigurationProperty("priority", DefaultValue = 5, IsRequired = false)]
+        public Int32 Priority
         {
             get
             {
-                return (EndpointCollection)this["subEndpoints"];
+                return (Int32)this["priority"];
+            }
+            set
+            {
+                this["priority"] = value;
             }
         }
     }
