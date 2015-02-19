@@ -7,6 +7,7 @@
 
 using System;
 using Nalarium.Reporting;
+using Nalarium.Reporting.ReportCreator;
 //+
 
 namespace Nalarium.Web.Processing

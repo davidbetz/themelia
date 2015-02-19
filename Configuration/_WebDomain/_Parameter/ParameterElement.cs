@@ -8,11 +8,12 @@
 using System;
 using System.Configuration;
 using System.Diagnostics;
+using Nalarium.Configuration.AppConfig;
 
 namespace Nalarium.Web.Processing.Configuration
 {
     [DebuggerDisplay("{Category}")]
-    public class ParameterElement : Nalarium.Configuration.ParameterElement
+    public class ParameterElement : Nalarium.Configuration.AppConfig.Parameter.ParameterElement
     {
         //- @Category -//
         [ConfigurationProperty("category")]

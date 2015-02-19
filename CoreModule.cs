@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Text;
 using System.Web;
 using System.Web.Routing;
-using Nalarium.Configuration;
+using Nalarium.Configuration.AppConfig;
 using Nalarium.Web.AccessRule;
 using Nalarium.Web.Processing.Configuration;
 //+

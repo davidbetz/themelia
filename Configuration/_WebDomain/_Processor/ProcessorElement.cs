@@ -8,7 +8,7 @@
 using System;
 using System.Configuration;
 using System.Diagnostics;
-using Nalarium.Configuration;
+using Nalarium.Configuration.AppConfig;
 
 namespace Nalarium.Web.Processing.Configuration
 {

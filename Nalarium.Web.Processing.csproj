@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nalarium.Web.Processing</RootNamespace>
     <AssemblyName>Nalarium.Web.Processing</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Nalarium.snk</AssemblyOriginatorKeyFile>
@@ -44,6 +44,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -53,11 +54,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Nalarium, Version=3.0.0.0, Culture=neutral, PublicKeyToken=dc6429114df2bd49, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(HomeDrive)\_REFERENCE\Debug\Nalarium.dll</HintPath>
+    <Reference Include="Nalarium">
+      <HintPath>C:\_REFERENCE\Debug\Nalarium.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -235,16 +236,6 @@
     <Compile Include="_Reusable\TraceErrorProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nalarium.Web.AccessRule\Nalarium.Web.AccessRule.csproj">
-      <Project>{BAC35EF1-94B4-4D02-BCBA-3A2A29E98FBF}</Project>
-      <Name>Nalarium.Web.AccessRule</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Nalarium.Web\Nalarium.Web.csproj">
-      <Project>{A0CABB6C-23E0-442E-8DD7-8CC6E01BA288}</Project>
-      <Name>Nalarium.Web</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Nalarium.snk" />
   </ItemGroup>
   <ItemGroup>
@@ -264,6 +255,16 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nalarium.Web.AccessRule\Nalarium.Web.AccessRule.csproj">
+      <Project>{bac35ef1-94b4-4d02-bcba-3a2a29e98fbf}</Project>
+      <Name>Nalarium.Web.AccessRule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nalarium.Web\Nalarium.Web.csproj">
+      <Project>{a0cabb6c-23e0-442e-8dd7-8cc6e01ba288}</Project>
+      <Name>Nalarium.Web</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -273,6 +274,6 @@
   </Target>
   -->
   <Target Name="AfterBuild">
-		<Copy SkipUnchangedFiles="true" SourceFiles="$(OutDir)\$(TargetFileName)" DestinationFiles="$(HomeDrive)\_REFERENCE\$(Configuration)\$(TargetFileName)" />
+    <Copy SkipUnchangedFiles="true" SourceFiles="$(OutDir)\$(TargetFileName)" DestinationFiles="$(HomeDrive)\_REFERENCE\$(Configuration)\$(TargetFileName)" />
   </Target>
 </Project>

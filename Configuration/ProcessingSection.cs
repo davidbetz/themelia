@@ -7,7 +7,7 @@
 
 using System;
 using System.Configuration;
-using ConfigurationSection = Nalarium.Configuration.ConfigurationSection;
+using ConfigurationSection = Nalarium.Configuration.AppConfig.ConfigurationSection;
 
 namespace Nalarium.Web.Processing.Configuration
 {

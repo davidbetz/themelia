@@ -8,12 +8,9 @@
 using System;
 using System.Configuration;
 
-//+
-//+
-
 namespace Nalarium.Web.Processing.Configuration
 {
-    public class ComponentParameterCollection : Nalarium.Configuration.ParameterCollection
+    public class ComponentParameterCollection : Nalarium.Configuration.AppConfig.Parameter.ParameterCollection
     {
         //- @Reset -//
         [ConfigurationProperty("reset")]

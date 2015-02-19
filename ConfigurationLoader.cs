@@ -12,14 +12,14 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Nalarium.Activation;
-using Nalarium.Configuration;
+using Nalarium.Configuration.AppConfig;
 using Nalarium.Web.Globalization;
 using Nalarium.Web.Processing.Configuration;
 using Nalarium.Web.Processing.Data;
 using Nalarium.Web.Security;
 using ParameterCollection = Nalarium.Web.Processing.Configuration.ParameterCollection;
-using ParameterElement = Nalarium.Configuration.ParameterElement;
-//+
+using ParameterElement = Nalarium.Web.Processing.Configuration.ParameterElement;
+using Nalarium.Configuration;
 
 namespace Nalarium.Web.Processing
 {
@@ -443,10 +443,10 @@ namespace Nalarium.Web.Processing
         }
 
         //- ~LoadFactoryData -//
-        internal static void LoadFactoryData(WebDomainData data, FactoryCollection collection)
+        internal static void LoadFactoryData(WebDomainData data, Nalarium.Configuration.AppConfig.Factory.FactoryCollection collection)
         {
-            List<FactoryElement> elementList = collection.ToList();
-            foreach (FactoryElement factory in elementList)
+            List<Nalarium.Configuration.AppConfig.Factory.FactoryElement> elementList = collection.ToList();
+            foreach (Nalarium.Configuration.AppConfig.Factory.FactoryElement factory in elementList)
             {
                 if (!factory.Enabled)
                 {
@@ -860,7 +860,7 @@ namespace Nalarium.Web.Processing
         //- ~GetParameterData -//
         internal static ParameterDataList GetComponentParameterData(ComponentParameterCollection collection)
         {
-            List<ParameterElement> elementList = collection.ToList();
+            List<Nalarium.Configuration.AppConfig.Parameter.ParameterElement> elementList = collection.ToList();
             var dataList = new ParameterDataList();
             foreach (ParameterElement element in elementList)
             {
