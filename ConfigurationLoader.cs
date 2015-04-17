@@ -862,7 +862,7 @@ namespace Nalarium.Web.Processing
         {
             List<Nalarium.Configuration.AppConfig.Parameter.ParameterElement> elementList = collection.ToList();
             var dataList = new ParameterDataList();
-            foreach (ParameterElement element in elementList)
+            foreach (var element in elementList)
             {
                 //+ parameter
                 String value = ProcessSingleSettingToken(element.Value);
