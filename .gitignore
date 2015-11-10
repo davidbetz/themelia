@@ -1,0 +1,7 @@
+*.dll.config
+*/bin/*
+*/obj/*
+packages/
+*.user
+Lib/Debug
+.vs/
