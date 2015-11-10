@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{05E20500-AC92-4D80-ADC8-77C05B361999}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nalarium.Web.Processing</RootNamespace>
+    <AssemblyName>Nalarium.Web.Processing</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Nalarium.snk</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Nalarium">
+      <HintPath>C:\_REFERENCE\Debug\Nalarium.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Routing">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccessRuleInitProcessor.cs" />
+    <Compile Include="BackingType.cs" />
+    <Compile Include="CatchAllMode.cs" />
+    <Compile Include="CommonHandlerFactory.cs" />
+    <Compile Include="CommonProcessorFactory.cs" />
+    <Compile Include="ConfigurationLoader.cs" />
+    <Compile Include="ConfigurationInitProcessor.cs" />
+    <Compile Include="Configuration\Activation\WebExceptionTypeFactory.cs" />
+    <Compile Include="Configuration\IProcessorElement.cs" />
+    <Compile Include="Configuration\Profiling\ProfilingElement.cs" />
+    <Compile Include="Configuration\ProcessingSection.cs" />
+    <Compile Include="Configuration\_Sequence\SequenceCollection.cs" />
+    <Compile Include="Configuration\_Sequence\SequenceElement.cs" />
+    <Compile Include="Configuration\_Sequence\_Version\VersionCollection.cs" />
+    <Compile Include="Configuration\_Sequence\_Version\VersionElement.cs" />
+    <Compile Include="Configuration\_Sequence\_View\ViewCollection.cs" />
+    <Compile Include="Configuration\_Sequence\_View\ViewElement.cs" />
+    <Compile Include="Configuration\_WebDomain\EditorElement.cs" />
+    <Compile Include="Configuration\_WebDomain\WebDomainCollection.cs" />
+    <Compile Include="Configuration\_WebDomain\WebDomainElement.cs" />
+    <Compile Include="Configuration\_WebDomain\_Component\ComponentCollection.cs" />
+    <Compile Include="Configuration\_WebDomain\_Component\ComponentElement.cs" />
+    <Compile Include="Configuration\_WebDomain\_Component\_Parameters\ComponentParameterCollection.cs" />
+    <Compile Include="Configuration\_WebDomain\_Editor\UserCollection.cs" />
+    <Compile Include="Configuration\_WebDomain\_Editor\UserElement.cs" />
+    <Compile Include="Configuration\_WebDomain\_Endpoint\EndpointCollection.cs" />
+    <Compile Include="Configuration\_WebDomain\_Endpoint\EndpointElement.cs" />
+    <Compile Include="Configuration\_WebDomain\_Parameter\ParameterCollection.cs" />
+    <Compile Include="Configuration\_WebDomain\_Parameter\ParameterElement.cs" />
+    <Compile Include="Configuration\_WebDomain\_Processor\ProcessorCollection.cs" />
+    <Compile Include="Configuration\_WebDomain\_Processor\ProcessorElement.cs" />
+    <Compile Include="Configuration\_WebDomain\_Security\SecurityElement.cs" />
+    <Compile Include="Configuration\_WebDomain\_Security\_Exception\SecurityExceptionCollection.cs" />
+    <Compile Include="Configuration\_WebDomain\_Security\_Exception\SecurityExceptionElement.cs" />
+    <Compile Include="ConfigViewerHttpHandler.cs" />
+    <Compile Include="CoreModule.cs" />
+    <Compile Include="Data\CatchAllProcessorDataList.cs" />
+    <Compile Include="Data\ComponentData.cs" />
+    <Compile Include="Data\ComponentDataList.cs" />
+    <Compile Include="Data\EndpointData.cs" />
+    <Compile Include="Data\EndpointDataList.cs" />
+    <Compile Include="Data\EndpointFactoryDataList.cs" />
+    <Compile Include="Data\ErrorProcessorData.cs" />
+    <Compile Include="Data\ErrorProcessorDataList.cs" />
+    <Compile Include="Data\FactoryData.cs" />
+    <Compile Include="Data\FactoryDataList.cs" />
+    <Compile Include="Data\SelectionProcessorDataList.cs" />
+    <Compile Include="Data\ObjectFactoryDataList.cs" />
+    <Compile Include="Data\ParameterData.cs" />
+    <Compile Include="Data\ParameterDataList.cs" />
+    <Compile Include="Data\OverrideProcessorDataList.cs" />
+    <Compile Include="Data\PostRenderProcessorDataList.cs" />
+    <Compile Include="Data\StateProcessorDataList.cs" />
+    <Compile Include="Data\InitProcessorDataList.cs" />
+    <Compile Include="Data\ProcessorData.cs" />
+    <Compile Include="Data\ProcessorDataList.cs" />
+    <Compile Include="Data\ProcessorFactoryDataList.cs" />
+    <Compile Include="Data\SecurityData.cs" />
+    <Compile Include="Data\SecurityExceptionData.cs" />
+    <Compile Include="Data\SecurityExceptionDataList.cs" />
+    <Compile Include="Data\SequenceData.cs" />
+    <Compile Include="Data\SequenceDataList.cs" />
+    <Compile Include="Data\VersionData.cs" />
+    <Compile Include="Data\VersionDataList.cs" />
+    <Compile Include="Data\ViewData.cs" />
+    <Compile Include="Data\ViewDataList.cs" />
+    <Compile Include="Data\WebDomainData.cs" />
+    <Compile Include="Data\WebDomainDataList.cs" />
+    <Compile Include="DebugInitProcessor.cs" />
+    <Compile Include="DefaultPageSelectionProcessor.cs" />
+    <Compile Include="DefaultPageOverrideProcessor.cs" />
+    <Compile Include="DefaultPageInitProcessor.cs" />
+    <Compile Include="DefaultType.cs" />
+    <Compile Include="Endpoint.cs" />
+    <Compile Include="EndpointSetMode.cs" />
+    <Compile Include="EntityNotFoundException.cs" />
+    <Compile Include="ErrorHandler.cs" />
+    <Compile Include="ExclusionInitProcessor.cs" />
+    <Compile Include="FaviconMode.cs" />
+    <Compile Include="FileAliasInitProcessor.cs" />
+    <Compile Include="FlowControl.cs" />
+    <Compile Include="HttpHandlerSelector.cs" />
+    <Compile Include="InvalidFactoryException.cs" />
+    <Compile Include="InvalidProcessorException.cs" />
+    <Compile Include="IProcessor.cs" />
+    <Compile Include="NalariumContext.cs" />
+    <Compile Include="Page.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PageInitializer.cs" />
+    <Compile Include="PageProtectionSelectionProcessor.cs" />
+    <Compile Include="PassThroughHandlerCreator.cs" />
+    <Compile Include="PassThroughHttpHandler.cs" />
+    <Compile Include="PassThroughInitProcessor.cs" />
+    <Compile Include="PathMatcher.cs" />
+    <Compile Include="ProcessorActivator.cs" />
+    <Compile Include="ProcessorRunner.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublicPageHandlerFactory.cs" />
+    <Compile Include="ResetFlagReader.cs" />
+    <Compile Include="ResetFlags.cs" />
+    <Compile Include="RouteActivator.cs" />
+    <Compile Include="RouteCache.cs" />
+    <Compile Include="ScannedTypeCacheInitProcessor.cs" />
+    <Compile Include="SecurityStateProcessor.cs" />
+    <Compile Include="Sequence\IInitializer.cs" />
+    <Compile Include="Sequence\LocalizedPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Sequence\Page.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Sequence\Sequencer.cs" />
+    <Compile Include="Sequence\SequenceType.cs" />
+    <Compile Include="Sequence\View.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Sequence\ViewAnalytics.cs" />
+    <Compile Include="Sequence\ViewVersionControlBuilder.cs" />
+    <Compile Include="ServiceEndpointInitProcessor.cs" />
+    <Compile Include="SessionStateProcessor.cs" />
+    <Compile Include="WebDomainOld.cs" />
+    <Compile Include="WebDomain.cs" />
+    <Compile Include="WebDomainInitProcessor.cs" />
+    <Compile Include="WebProcessingReportController.cs" />
+    <Compile Include="_Base\Component.cs" />
+    <Compile Include="_Base\ContextInitProcessor.cs" />
+    <Compile Include="_Base\ErrorProcessor.cs" />
+    <Compile Include="_Base\Factory.cs" />
+    <Compile Include="_Base\HandlerFactory.cs" />
+    <Compile Include="_Base\InitProcessor.cs" />
+    <Compile Include="_Base\OverrideProcessor.cs" />
+    <Compile Include="_Base\PostRenderProcessor.cs" />
+    <Compile Include="_Base\ProcessorFactory.cs" />
+    <Compile Include="_Base\SelectionProcessor.cs" />
+    <Compile Include="_Base\StateProcessor.cs" />
+    <Compile Include="_Base\SystemInitProcessor.cs" />
+    <Compile Include="_Base\VerbalInitProcessor.cs" />
+    <Compile Include="_Editor\ConfigEditorHttpHandler.cs" />
+    <Compile Include="_Editor\UserType.cs" />
+    <Compile Include="_Interface\IHandlesDeleteVerb.cs" />
+    <Compile Include="_Interface\IHandlesGetVerb.cs" />
+    <Compile Include="_Interface\IHandlesHeadVerb.cs" />
+    <Compile Include="_Interface\IHandlesPostVerb.cs" />
+    <Compile Include="_Interface\IHandlesPutVerb.cs" />
+    <Compile Include="_Interface\IHandlesVerb.cs" />
+    <Compile Include="_Interface\IVerbHandler.cs" />
+    <Compile Include="_Reusable\BlockedHttpHandler.cs" />
+    <Compile Include="_Reusable\DebugErrorProcessor.cs" />
+    <Compile Include="_Reusable\DummyHttpHandler.cs" />
+    <Compile Include="_Reusable\EmailSendingErrorProcessor.cs" />
+    <Compile Include="_Reusable\NotFoundHttpHandler.cs" />
+    <Compile Include="_Reusable\PageEndpointHttpHandler.cs" />
+    <Compile Include="_Reusable\RedirectHttpHandler.cs" />
+    <Compile Include="_Reusable\TraceErrorProcessor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Nalarium.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nalarium.Web.AccessRule\Nalarium.Web.AccessRule.csproj">
+      <Project>{bac35ef1-94b4-4d02-bcba-3a2a29e98fbf}</Project>
+      <Name>Nalarium.Web.AccessRule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nalarium.Web\Nalarium.Web.csproj">
+      <Project>{a0cabb6c-23e0-442e-8dd7-8cc6e01ba288}</Project>
+      <Name>Nalarium.Web</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Target Name="AfterBuild">
+    <Copy SkipUnchangedFiles="true" SourceFiles="$(OutDir)\$(TargetFileName)" DestinationFiles="$(HomeDrive)\_REFERENCE\$(Configuration)\$(TargetFileName)" />
+  </Target>
+</Project>
