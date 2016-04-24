@@ -1,6 +1,14 @@
 [Themelia Pro website on Azure](http://themeliapro.azurewebsites.net/)
 
-Themelia (aka Nalarium.Web.Processing; **historical**) - now defunct project about proved me mad in 2008. It's the largest things I've ever worked on. *It's ASP.NET on crack* (a concept inspired by my [collegue/mentor](https://github.com/Grimace1975)). I threw the [Themelia Pro website up on Azure](http://themeliapro.azurewebsites.net/) just for historical purposes. All the docs are there. I didn't update all the images. Don't care. Anyway: everything ran through a master HTTP module brain. You could define a website, then inherit one site from another (multi-tenancy through OOP XML config). You controlled your website via a surface area (i.e. white-listing): You controlled how you wanted your site to be accessed; locked down by default. Want /contact? Define it. It also ran off "web domains" (like app domains, but for your web site; think of lightweight virtual applications.) Then there was the component model (programmatic packages of stuff analagous to the following XML). It was crazy huge. I wanted to reinvent web development. About lost my mind in the process...Just for fun, below was one website's config file:
+Themelia (aka Nalarium.Web.Processing; **historical**) - now defunct project about drove me mad in 2008. It's the largest things I've ever worked on. *It's ASP.NET on crack* (a concept inspired by my [collegue/mentor](https://github.com/Grimace1975)).
+
+I threw the [Themelia Pro website up on Azure](http://themeliapro.azurewebsites.net/) just for historical purposes. All the docs are there. I didn't update all the images. Don't care.
+
+So... everything ran through a master HTTP module brain. You could define a website, then inherit one site from another (multi-tenancy through OOP XML config). You controlled your website via a surface area (i.e. white-listing): You controlled how you wanted your site to be accessed; locked down by default. Want /contact? Define it. It also ran off "web domains" (like app domains, but for your web site; think of lightweight virtual applications.) Then there was the component model (programmatic packages of stuff analagous to the following XML).
+
+It was crazy huge. I wanted to reinvent web development. I feel like I about lost my mind in the process...
+
+Just for fun, below was one website's config file:
 
 View samples as [ThemeliaProSamples](https://github.com/davidbetz/ThemeliaProSamples).
 
