@@ -1,12 +1,10 @@
-[Themelia Pro website on Azure](http://themeliapro.azurewebsites.net/)
+[Themelia Pro website on Azure](http://themeliapro.azurewebsites.net)
 
-Themelia (aka Nalarium.Web.Processing; **historical**) - now defunct project about drove me mad in 2008. It's the largest things I've ever worked on. *It's ASP.NET on crack* (a concept inspired by my [collegue/mentor](https://github.com/Grimace1975)).
+Themelia (aka Nalarium.Web.Processing; **historical**) - now defunct project about drove me mad in 2008. It's the largest project I've ever worked on. *It's ASP.NET on crack* (a concept inspired by my [collegue/mentor](https://github.com/Grimace1975)). I like to think of my ASP.NET MVP being my reward for this waste of time. I know how to design and build things, but I have ZERO clue how to do marketing, so I let it die.
 
-I threw the [Themelia Pro website up on Azure](http://themeliapro.azurewebsites.net/) just for historical purposes. All the docs are there. I didn't update all the images. Don't care.
+Wonder how huge this project was? Go look: [http://themeliapro.azurewebsites.net](http://themeliapro.azurewebsites.net). Click on "Read documentation" on the left. All the docs are there. I didn't update all the images. Don't care. My goal was to reinvent web development in .NET. It was a success, but I didn't know what to do with it.
 
-So... everything ran through a master HTTP module brain. You could define a website, then inherit one site from another (multi-tenancy through OOP XML config). You controlled your website via a surface area (i.e. white-listing): You controlled how you wanted your site to be accessed; locked down by default. Want /contact? Define it. It also ran off "web domains" (like app domains, but for your web site; think of lightweight virtual applications.) Then there was the component model (programmatic packages of stuff analagous to the following XML).
-
-It was crazy huge. I wanted to reinvent web development. I feel like I about lost my mind in the process...
+So... the most low-level component was the HTTP module: everything ran through a master HTTP module brain. You could define a website, then inherit one site from another (multi-tenancy through OOP XML config). You controlled your website via a surface area (i.e. white-listing): You controlled how you wanted your site to be accessed; locked down by default. Want /contact? Define it. It also ran off "web domains" (like app domains, but for your web site; think of lightweight virtual applications.) Then there was the component model (programmatic packages of stuff analagous to the following XML). It was crazy huge. I wanted to reinvent web development in .NET.
 
 Just for fun, below was one website's config file:
 
